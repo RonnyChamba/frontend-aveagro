@@ -1,0 +1,179 @@
+<div class="p-5">
+  <div class="rounded-2xl shadow bg-white p-6">
+    <nav class="flex gap-4 justify-between items-center flex-wrap md:flex-row flex-col">
+      <!-- Search -->
+      <div class="bg-stone-100 w-full md:max-w-96 flex h-11 items-center rounded-2xl ps-4 gap-4">
+        <label for="searchApp" class="relative size-4 shrink-0"
+          ><img ngSrc="/assets/icons/search.svg" alt="Search" fill
+        /></label>
+        <input
+          type="text"
+          id="searchApp"
+          placeholder="buscar"
+          class="bg-transparent grow h-full px-2"
+          (keyup.enter)="this.searchService.updateQuery(search)"
+        />
+      </div>
+      <div class="flex items-center gap-4 max-md:w-full">
+        <button
+          class="flex items-center gap-2 bg-blue-900 text-white px-4 py-2 rounded-lg"
+          (click)="generatePDF()"
+        >
+          <img src="/assets/icons/pdf.svg" alt="PDF" class="w-5 h-5" />
+        </button>
+
+        <button
+          class="flex items-center gap-2 bg-secondary text-white px-4 py-2 rounded-lg"
+          (click)="newInventary.open()"
+        >
+          <img src="/assets/icons/add.svg" alt="Create" class="w-5 h-5" />
+          Agregar
+        </button>
+      </div>
+
+
+    </nav>
+
+    <hr class="my-4" />
+    <section>
+      <div class="relative overflow-x-auto">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
+              <th scope="col">Nombre</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Tipo</th>
+              <th scope="col">Precio Unitario</th>
+              <th scope="col">Accion</th>
+            </tr>
+          </thead>
+          @if (loading()) {
+          <tbody>
+            <td colspan="100%">
+              <div class="text-center py-9">
+                <div class="loader"></div>
+              </div>
+            </td>
+          </tbody>
+          } @else { @if (products() && products().length > 0) {
+          <tbody>
+            @for (inventary of products(); track inventary.id) {
+            <tr
+              class="bg-white border-b border-dashed border-neutral-200 *:px-6 *:py-4 *:whitespace-nowrap [&>th]:ps-0"
+            >
+              <th scope="row" [routerLink]="[inventary.id]" class="font-normal">
+                <a [routerLink]="[inventary.id]">
+                  <div class="flex gap-4 items-center">
+                    <div class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase">
+                      {{ inventary.nombre | initials }}
+                    </div>
+                    <div>
+                      <p class="font-bold">{{ inventary.nombre }}</p>
+                    </div>
+                  </div>
+                </a>
+              </th>
+              <td>
+                {{ inventary.descripcion }}
+              </td>
+              <td>
+                <div
+                  class="flex items-center gap-2 justify-center rounded-lg px-2 py-1 text-white w-20"
+                  [ngClass]="inventary.cantidad > 5 ? 'bg-emerald-500' : 'bg-red-500'"
+                >
+                  {{ inventary.cantidad }}
+                </div>
+              </td>
+              <td>{{ config.tipo_articulo()[inventary.tipo_articulo] }}</td>
+              <td>{{ inventary.precio | currency }} C/U</td>
+              <td>
+                <button
+                  (click)="deleteInventario.open(); dataFlotante.set(inventary.id)"
+                class="bg-red-500 rounded-lg p-3 inline-block cursor-pointer">
+                  <img src="assets/icons/trash-icon.svg" alt="Eliminar" class="size-4" />
+                </button>
+              </td>
+            </tr>
+            }
+          </tbody>
+          } @else { @defer {
+          <tbody>
+            <td colspan="100%">
+            <app-not-invetary-found/>
+            </td>
+          </tbody>
+          } } }
+        </table>
+      </div>
+
+
+    </section>
+  </div>
+</div>
+<app-modal #newInventary>
+  @defer {
+  <div class="h-full flex items-center">
+    <div class="bg-white w-full rounded-lg overflow-auto max-h-full">
+      <header class="p-4 flex justify-between items-center border border-b border-gray-300">
+        <h2 class="font-bold text-xl truncate">Nuevo Producto</h2>
+        <button (click)="newInventary.close()" class="shrink-0">
+          <img
+            ngSrc="/assets/icons/close-icon.svg"
+            width="14"
+            height="18"
+            alt="close"
+            style="filter: invert(64%) sepia(1%) saturate(370%) hue-rotate(314deg) brightness(94%) contrast(91%)"
+          />
+        </button>
+      </header>
+      <section class="p-4">
+        <app-create-inventory (inventary)="newInventary.close()"
+        (inventary)="$event && addInventary($event)"
+        />
+      </section>
+    </div>
+  </div>
+  }
+</app-modal>
+<app-modal #deleteInventario>
+  @defer {
+  <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+    <div class="bg-white w-full max-w-2xl rounded-lg overflow-auto">
+      <header class="p-4 flex justify-between items-center border border-b border-gray-300">
+        <h2 class="font-bold text-xl truncate">Eliminar Producto</h2>
+        <button (click)="deleteInventario.close()" class="shrink-0">
+          <img
+            ngSrc="/assets/icons/close-icon.svg"
+            width="14"
+            height="18"
+            alt="close"
+            style="filter: invert(64%) sepia(1%) saturate(370%) hue-rotate(314deg) brightness(94%) contrast(91%)"
+          />
+        </button>
+      </header>
+      @if (dataFlotante(); as idProducto) {
+
+        <section class="p-4">
+          <div class="text-center p-6">
+            <div class="flex justify-center">
+              <div class="p-4 bg-red-100 rounded-full">
+              <img src="/assets/icons/info.svg" alt="" class="size-12" />
+            </div>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mt-4">¿Estás seguro de que deseas eliminar este producto?</h3>
+          <p class="text-gray-500 mt-2">Una vez eliminado, no podrás recuperar los datos.</p>
+          <div class="mt-6 flex flex-col md:flex-row justify-center gap-4">
+            <button class="bg-gray-200 text-gray-600 px-4 py-2 rounded-md" (click)="deleteInventario.close()">
+              Cancelar
+            </button>
+            <button class="bg-red-600 text-white px-4 py-2 rounded-md"
+            (click)="deleteInvetario(idProducto); deleteInventario.close()">Eliminar</button>
+          </div>
+        </div>
+      </section>
+    }
+    </div>
+  </div>
+  }
+</app-modal>

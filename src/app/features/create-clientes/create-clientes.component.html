@@ -1,0 +1,48 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="w-full">
+  <div class="p-4">
+    <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="mb-4">
+        <app-custom-select formControlName="tipoDocumento" placeholder="Tipo de documento"
+          [options]="tipo_documento().values" [labels]="tipo_documento().labels" />
+      </div>
+
+    </div> -->
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="mb-4">
+        <app-custom-input formControlName="dni" [label]="cedulaLabel()" />
+      </div>
+
+      <div class="mb-4">
+        <app-custom-input formControlName="name" label="Nombres" />
+      </div>
+
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="mb-4">
+        <app-custom-input formControlName="email" label="Email" />
+      </div>
+
+      <div class="mb-4">
+        <app-custom-input formControlName="cellphone" label="Telefono" />
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <app-custom-input formControlName="address" label="Direccion" />
+    </div>
+
+  </div>
+  <div class="flex gap-4 justify-end mt-10 md:flex-row flex-col text-center max-md:w-full">
+    @if (!loading()) {
+    <button class="items-center gap-2 bg-zinc-200 px-4 py-2 rounded-lg md:flex" type="button"
+      (click)="client.emit(null)">
+      Cancelar
+    </button>
+    <button class="bg-secondary px-4 py-2 rounded-lg text-white" type="submit">Guardar</button>
+    } @else {
+    <div class="loader"></div>
+    }
+  </div>
+</form>

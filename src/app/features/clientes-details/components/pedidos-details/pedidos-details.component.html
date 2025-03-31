@@ -1,0 +1,230 @@
+@if (loading()) {
+<div class="h-full text-center flex justify-center items-center">
+  <div class="loader"></div>
+</div>
+} @else {
+<div>
+  <nav class="flex gap-4 justify-between items-center flex-wrap md:flex-row flex-col">
+    <h1 class="text-2xl font-bold">Pedidos</h1>
+    <div class="max-md:w-full">
+      <button
+        class="flex items-center gap-2 bg-secondary text-white px-4 py-2 rounded-lg w-full justify-center"
+        (click)="createPedido.open()"
+      >
+        <div class="relative size-5 shrink-0"><img ngSrc="/assets/icons/add.svg" alt="Create" fill /></div>
+        Create
+      </button>
+    </div>
+  </nav>
+  @if (pedidos() && pedidos()!.length > 0) {
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-6">
+    @for (item of pedidos(); track $index) {
+    <div
+      class="p-4 rounded-lg shadow-md relative cursor-pointer transition-all duration-300 bg-gray-200 w-6/4"
+      (click)="toggleExpand($index)"
+      [style.maxHeight]="expandedIndex() === $index ? 'none' : '160px'"
+      style="overflow: hidden"
+    >
+      <p class="text-sm mb-10 mt-8" [ngClass]="{ 'line-clamp-3': expandedIndex() !== $index }">
+        @for (prenda of item.prendas; track $index) {
+        <li>{{ prenda.nombre_prenda }}</li>
+        <li>
+          Cantidad:
+           {{ prenda.cantidad }}
+        </li>
+        }
+        <li>{{ item.descripcion }}</li>
+        <li>{{ config.metodo_pago()[item.tipoPago] }}</li>
+        <li>Ingreso: {{ item.fecha_ingreso | customDate }}</li>
+        <li>Tiempo: {{ item.tiempo_total }}</li>
+        <li>Total: {{ item.total | currency }}</li>
+      </p>
+
+      <div class="absolute top-4 left-4 text-red-600">{{ config.statusUser()[item.estado] }}</div>
+      <div class="absolute bottom-4 right-4 text-sm">Retiro: {{ item.fecha_entrega | customDate }}</div>
+
+      <div class="absolute top-4 right-4 flex gap-2">
+        <!-- Botón Eliminar -->
+        <button (click)="deletePedido.open(); setPedidoId(item.id)">
+          <img src="/assets/icons/trash-icon.svg" width="14" height="16" alt="Eliminar" />
+        </button>
+
+        <!-- Botón Editar -->
+        <button (click)="editPedido.open(); viewing.set(item)">
+          <img src="/assets/icons/edit-copy.svg" class="size-4" alt="Editar" />
+        </button>
+
+        <!-- Botón Entregar -->
+        <button (click)="entregarPedido.open(); viewingPedido.set(item.id)">
+          <img src="/assets/icons/check-icon.svg" class="size-4" alt="Entregar" />
+        </button>
+
+        <!-- Botón PDF -->
+        <button (click)="downloadPDF(item)">
+          <img src="/assets/icons/pdf.svg" alt="PDF" class="size-4" width="14" height="16" />
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+  } @else {
+  <div class="text-center py-4 max-w-2xl mx-auto">
+    <div class="bg-slate-50 py-4 mb-5 rounded-xl">
+      <img
+        ngSrc="/assets/icons/no-contacts-found.svg"
+        alt="Nothing found"
+        width="242"
+        height="242"
+        priority
+        class="mx-auto"
+      />
+    </div>
+    <h3 class="text-2xl font-bold">No se encontraron pedidos</h3>
+    <p class="text-balance">
+      No se han encontrado pedidos con estos términos de búsqueda, intenta ajustar los filtros, o registra un nuevo
+      pedido.
+    </p>
+  </div>
+  }
+</div>
+}
+
+<app-modal #deletePedido>
+  @defer {
+  <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+    <div class="bg-white w-full max-w-2xl rounded-lg overflow-auto">
+      <header class="p-4 flex justify-between items-center border-b border-gray-300">
+        <h2 class="font-bold text-xl truncate">Eliminar Pedido</h2>
+        <button (click)="deletePedido.close()" class="shrink-0">
+          <img
+            ngSrc="/assets/icons/close-icon.svg"
+            width="14"
+            height="18"
+            alt="close"
+            style="filter: invert(64%) sepia(1%) saturate(370%) hue-rotate(314deg) brightness(94%) contrast(91%)"
+          />
+        </button>
+      </header>
+      <div class="text-center p-6">
+        <div class="flex justify-center">
+          <div class="p-4 bg-red-100 rounded-full">
+            <img src="/assets/icons/info.svg" alt="" class="size-12" />
+          </div>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mt-4">¿Estás seguro de que deseas eliminar este pedido?</h3>
+        <p class="text-gray-500 mt-2">Una vez eliminado, no podrás recuperar este pedido.</p>
+        <div class="mt-6 flex flex-col md:flex-row justify-center gap-4">
+          <button class="bg-gray-200 text-gray-600 px-4 py-2 rounded-md" (click)="deletePedido.close()">
+            Cancelar
+          </button>
+          <button class="bg-red-600 text-white px-4 py-2 rounded-md" (click)="deletePedido.close(); removePedido()">
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+</app-modal>
+
+<app-modal #createPedido>
+  @defer {
+  <div class="h-full flex items-center">
+    <div class="bg-white w-full rounded-lg overflow-auto max-h-full">
+      <header class="p-4 flex justify-between items-center border border-b border-gray-300">
+        <h2 class="font-bold text-xl truncate">Crear Pedido</h2>
+        <button (click)="createPedido.close()" class="shrink-0">
+          <img
+            ngSrc="/assets/icons/close-icon.svg"
+            width="14"
+            height="18"
+            alt="close"
+            style="filter: invert(64%) sepia(1%) saturate(370%) hue-rotate(314deg) brightness(94%) contrast(91%)"
+          />
+        </button>
+      </header>
+      <section class="p-4">
+        <app-create-pedido
+          [id]="idCliente()"
+          (newPedidos)="createPedido.close()"
+          (newPedidos)="$event && createProducto($event)"
+        />
+      </section>
+    </div>
+  </div>
+  }
+</app-modal>
+
+<app-modal #editPedido>
+  @defer {
+  <div class="h-full flex items-center">
+    <div class="bg-white w-full rounded-lg overflow-auto max-h-full">
+      <header class="p-4 flex justify-between items-center border border-b border-gray-300">
+        <h2 class="font-bold text-xl truncate">Editar Pedido</h2>
+        <button (click)="editPedido.close()" class="shrink-0">
+          <img
+            ngSrc="/assets/icons/close-icon.svg"
+            width="14"
+            height="18"
+            alt="close"
+            style="filter: invert(64%) sepia(1%) saturate(370%) hue-rotate(314deg) brightness(94%) contrast(91%)"
+          />
+        </button>
+      </header>
+      <section class="p-4">
+        @if (viewing(); as editPedidos ) {
+        <app-edit-pedido
+          [editarPedido]="editPedidos"
+          (editPedido)="editPedido.close()"
+          (editPedido)="$event && updatePedido($event); viewing.set(null)"
+        />
+        }
+      </section>
+    </div>
+  </div>
+  }
+</app-modal>
+
+<app-modal #entregarPedido>
+  @defer {
+  <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+    <div class="bg-white w-full max-w-2xl rounded-lg overflow-auto">
+      <header class="p-4 flex justify-between items-center border-b border-gray-300">
+        <h2 class="font-bold text-xl truncate">Entregar Pedido</h2>
+        <button (click)="entregarPedido.close()" class="shrink-0">
+          <img
+            ngSrc="/assets/icons/close-icon.svg"
+            width="14"
+            height="18"
+            alt="close"
+            style="filter: invert(64%) sepia(1%) saturate(370%) hue-rotate(314deg) brightness(94%) contrast(91%)"
+          />
+        </button>
+      </header>
+      @if (viewingPedido(); as pedidoId ) {
+      <div class="text-center p-6">
+        <div class="flex justify-center">
+          <div class="p-4 bg-red-100 rounded-full">
+            <img src="/assets/icons/info.svg" alt="" class="size-12" />
+          </div>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mt-4">¿Estás seguro de que deseas entregar este pedido?</h3>
+        <p class="text-gray-500 mt-2">Una vez entregado, no podrás recuperar este pedido.</p>
+        <div class="mt-6 flex flex-col md:flex-row justify-center gap-4">
+          <button class="bg-gray-200 text-gray-600 px-4 py-2 rounded-md" (click)="entregarPedido.close()">
+            Cancelar
+          </button>
+          <button
+            class="bg-red-600 text-white px-4 py-2 rounded-md"
+            (click)="finalizarPedido(pedidoId); entregarPedido.close()"
+          >
+            Entregar
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+  }
+</app-modal>

@@ -1,0 +1,43 @@
+<section class="p-4 flex justify-center items-center">
+  <div class="relative w-full">
+    <div class="bg-stone-100 w-full flex h-11 items-center rounded-2xl px-4 gap-4">
+      <div class="relative size-4 shrink-0">
+        <img src="/assets/icons/search.svg" alt="Search" fill />
+      </div>
+      <input
+        type="text"
+        placeholder="Search"
+        class="bg-transparent grow h-full px-2 w-full"
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="searchClientes()"
+      />
+    </div>
+    @if (showResults()) { @if (loading() ) {
+    <div class="p-4 text-center">
+      <div class="loader"></div>
+    </div>
+    } @else {
+    <ul class="list-none p-2">
+      @for (item of clientes(); track $index) {
+      <li
+        (click)="resetSearch()"
+        class="p-2 cursor-pointer hover:bg-gray-100 flex items-center gap-3 bg-white border-b border-dashed border-neutral-200"
+        (click)="clienteSelected.emit(item)"
+        >
+        <!-- (click)="contacts.set([])" -->
+        <div>
+          <div class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase">
+            {{ item.nombres | initials }}
+          </div>
+        </div>
+        <div class="flex-grow truncate">
+          <div class="font-semibold truncate">{{ item.nombres }}</div>
+        </div>
+      </li>
+      }
+    </ul>
+    } } @if (nothingFound()) {
+    <p class="text-center py-2">No se encontraron resultados.</p>
+    }
+  </div>
+</section>

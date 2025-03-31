@@ -1,0 +1,226 @@
+<form [formGroup]="form">
+  <div class="flex justify-end items-end mb-6 space-y-4 md:space-x-4 md:flex-row flex-col">
+    <!-- Opción Pendiente -->
+    <div class="flex items-center">
+      <input id="checkPendiente" type="radio" class="hidden peer" formControlName="estado" value="PENDIENTE" checked />
+      <label
+        for="checkPendiente"
+        class="cursor-pointer flex items-center justify-center px-4 py-2 rounded-lg border border-gray-300 transition-colors duration-200 peer-checked:bg-blue-500 peer-checked:text-white hover:bg-gray-100"
+      >
+        Pendiente
+      </label>
+    </div>
+
+    <!-- Opción En Proceso -->
+    <div class="flex items-center">
+      <input id="checkProceso" type="radio" class="hidden peer" formControlName="estado" value="PROCESO" />
+      <label
+        for="checkProceso"
+        class="cursor-pointer flex items-center justify-center px-4 py-2 rounded-lg border border-gray-300 transition-colors duration-200 peer-checked:bg-blue-500 peer-checked:text-white hover:bg-gray-100"
+      >
+        En Proceso
+      </label>
+    </div>
+
+    <!-- Campo de Código -->
+    <div class="flex items-center">
+      <input
+        class="shadow appearance-none border-2 border-blue-500 rounded w-32 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-300"
+        type="text"
+        formControlName="codigo"
+        placeholder="Código"
+      />
+    </div>
+  </div>
+  <div formArrayName="prendas">
+    @for (prenda of prendas.controls; track $index) {
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4" [formGroupName]="$index">
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="pedidoSelect"> Selecciona una prenda </label>
+        <select
+          id="pedidoSelect"
+          class="block w-full bg-white border border-gray-300 rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:ring focus:border-sky-500"
+          (change)="onPedidoSelect($event, $index)"
+        >
+          <option value="" disabled selected>Seleccionar</option>
+          @for (pedido of pedidos(); track $index) {
+          <option [value]="pedido.id">
+            {{ pedido.nombre_prenda }}
+          </option>
+          }
+        </select>
+        @if (prenda.get('nombre_prenda')?.hasError('required') && prenda.get('nombre_prenda')?.touched) {
+
+        <div class="text-red-500 text-sm">La prenda es requerida.</div>
+        }
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="cantidad"> Cantidad </label>
+        <div class="relative">
+          <input
+            id="cantidad"
+            type="number"
+            class="w-full border border-gray-300 rounded-md py-2 px-3"
+            formGroupName="cantidad"
+            [min]="1"
+            [value]="prenda.value.cantidad"
+            (keydown.enter)="$event.preventDefault()"
+            (keydown)="restrictInput($event)"
+            (change)="onCantidadChange($event, $index)"
+          />
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="precio"> Precio </label>
+        <div class="relative">
+          <input
+            id="precio"
+            type="number"
+            class="w-full bg-gray-100 border border-gray-300 rounded-md py-2 px-3 text-gray-700 cursor-not-allowed pr-8"
+            [value]="prenda.value.precio * prenda.value.cantidad"
+            (keydown.enter)="$event.preventDefault()"
+
+            readonly
+          />
+          <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="tiempo"> Tiempo </label>
+        <div class="relative">
+          <input
+            id="tiempo"
+            type="number"
+            class="w-full bg-gray-100 border border-gray-300 rounded-md py-2 px-3 text-gray-700 cursor-not-allowed pr-8"
+            [value]="prenda.value.tiempo_lavado * prenda.value.cantidad"
+            (keydown.enter)="$event.preventDefault()"
+            disabled
+          />
+          <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">min</span>
+        </div>
+      </div>
+
+      <div class="mb-4 mt-7 flex gap-4">
+        <button
+          class="flex items-center gap-2 bg-secondary text-white px-3 py-2 rounded-md text-xs"
+          (click)="addPrenda()"
+        >
+          <div class="relative size-5 shrink-0">
+            <img src="/assets/icons/add.svg" alt="Crear" />
+          </div>
+          Agregar
+        </button>
+        @if ($index > 0 ) {
+
+        <button class="flex items-center gap-2 text-white px-3 py-2 rounded-md text-xs" (click)="deletePrenda($index)">
+          <div class="relative size-5 shrink-0">
+            <img src="/assets/icons/trash-icon.svg" alt="Eliminar" />
+          </div>
+        </button>
+        }
+      </div>
+    </div>
+    }
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+    <div class="mb-4">
+      <app-custom-input
+        formControlName="fecha_ingreso"
+        label="Fecha ingreso"
+        type="date"
+        [min]="today()"
+        (keydown.enter)="$event.preventDefault()"
+      />
+    </div>
+
+    <div class="mb-4">
+      <app-custom-input
+        formControlName="fecha_entrega"
+        label="Fecha retiro"
+        type="date"
+        [min]="today()"
+        (keydown.enter)="$event.preventDefault()"
+      />
+    </div>
+
+    <div class="mb-4">
+      <app-custom-select
+        formControlName="tipoPago"
+        placeholder="Tipo de pago"
+        [options]="metodo_pago().values"
+        [labels]="metodo_pago().labels"
+      />
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <textarea
+      id="textarea"
+      name="textarea"
+      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+      rows="4"
+      formControlName="descripcion"
+      placeholder="Descripcion..."
+    ></textarea>
+  </div>
+
+  <div class="mt-8 mb-4 flex justify-end gap-4">
+    <div class="md:w-1/6">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="tiempo_total">Total Tiempo Lavado</label>
+      <div class="relative">
+        <input
+          id="tiempo_total"
+          class="shadow appearance-none border-2 border-red-500 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:border-red-700 focus:ring-2 focus:ring-red-300 pr-12"
+          type="text"
+          [value]="calcularTiempo()"
+          formControlName="tiempo_total"
+          readonly
+        />
+      </div>
+    </div>
+
+    <div class="w-full md:w-1/6">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="descuento">Descuento</label>
+      <div class="relative">
+        <input
+          id="descuento"
+          class="shadow appearance-none border-2 border-red-500 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:border-red-700 focus:ring-2 focus:ring-red-300 pr-12"
+          type="number"
+          formControlName="descuento"
+          (keydown.enter)="$event.preventDefault()"
+          placeholder="Descuento"
+        />
+        <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
+      </div>
+    </div>
+
+    <div class="w-full md:w-1/3">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="total">Total a pagar</label>
+      <input
+        id="total"
+        class="shadow appearance-none border-2 border-red-500 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:border-red-700 focus:ring-2 focus:ring-red-300"
+        type="number"
+        (keydown.enter)="$event.preventDefault()"
+        placeholder="Total a pagar"
+        formControlName="total"
+        [value]="calcularTotal()"
+        readonly
+      />
+    </div>
+  </div>
+
+  <div class="flex gap-4 justify-end mt-10 md:flex-row flex-col text-center max-md:w-full">
+    @if (!loading()) {
+    <button
+      class="items-center gap-2 bg-zinc-200 px-4 py-2 rounded-lg md:flex"
+      type="button"
+      (click)="newPedidos.emit(null)"
+    >
+      Cancelar
+    </button>
+    <button class="bg-secondary px-4 py-2 rounded-lg text-white" (click)="submit()">Guardar</button>
+    } @else {
+    <div class="loader"></div>
+    }
+  </div>
+</form>
