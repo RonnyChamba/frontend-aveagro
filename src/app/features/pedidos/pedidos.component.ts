@@ -9,6 +9,8 @@ import { CreateClientesComponent } from '../create-clientes';
 import { consumidorFinal } from '../../interfaces/constante';
 import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ListaProductosComponent } from './components';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-pedidos',
@@ -178,21 +180,16 @@ export class PedidosComponent {
 
 
   guardar() {
-
-
-
-    const productos = this.products().map((p) => (
-      {
-        name: p.name,
-        mainCode: p.mainCode,
-        auxiliaryCode: p.auxiliaryCode,
-        description: "sin data",
-        price: p.price,
-        amount: p.amount,
-        measurementUnit: p.measurementUnit,
-        subtotal: p.valorTotal
-      }));
-
+    const productos = this.products().map((p) => ({
+      name: p.name,
+      mainCode: p.mainCode,
+      auxiliaryCode: p.auxiliaryCode,
+      description: "sin data",
+      price: p.price,
+      amount: p.amount,
+      measurementUnit: p.measurementUnit,
+      subtotal: p.valorTotal
+    }));
 
     const data = {
       products: productos,
@@ -206,15 +203,45 @@ export class PedidosComponent {
       }
     };
 
-
- of(this.loading.set(true)).pipe(
-      mergeMap(() => this.pedidoService.saveVenta(data)),
-      finalize(() => this.loading.set(false)),
-    ).subscribe((resp) => {
-      this.products.set([]);
-      this.filteredOptions.set(null);
-      this.selectedCliente.set(null);
+    Swal.fire({
+      title: "¿Confirmar venta?",
+      text: "¿Estás seguro de que quieres guardar esta venta?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#28a745",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, guardar",
+      cancelButtonText: "Cancelar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        of(this.loading.set(true))
+          .pipe(
+            mergeMap(() => this.pedidoService.saveVenta(data)),
+            finalize(() => this.loading.set(false))
+          )
+          .subscribe(
+            (resp) => {
+              Swal.fire({
+                title: "¡Venta guardada!",
+                text: "La venta se ha registrado exitosamente.",
+                icon: "success",
+                confirmButtonColor: "#28a745"
+              });
+              this.products.set([]);
+              this.selectedCliente.set(null);
+            },
+            (error) => {
+              Swal.fire({
+                title: "Error",
+                text: "Hubo un problema al guardar la venta.",
+                icon: "error",
+                confirmButtonColor: "#d33"
+              });
+            }
+          );
+      }
     });
+  }
 
   }
 
@@ -232,4 +259,4 @@ export class PedidosComponent {
 
 
 
-}
+
