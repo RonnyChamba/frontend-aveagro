@@ -140,15 +140,15 @@ export class CreatePedidoService {
      console.log('Cliente:', cliente);
       console.log('Pedido:', pedido);
 
-     try {
-       const clienteDocRef = await this.clienteService.createCliente(cliente);
+    //  try {
+    //    const clienteDocRef = await this.clienteService.createCliente(cliente);
 
-       await this.clienteService.createPedido(pedido, clienteDocRef.id);
-       this.submitting.set(false);
-       this.created.set(true);
-     } catch (error) {
-       console.error('Error al crear cliente o pedido:', error);
-     }
+    //    await this.clienteService.createPedido(pedido, clienteDocRef.id);
+    //    this.submitting.set(false);
+    //    this.created.set(true);
+    //  } catch (error) {
+    //    console.error('Error al crear cliente o pedido:', error);
+    //  }
   }
 
 }

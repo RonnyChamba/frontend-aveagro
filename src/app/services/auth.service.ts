@@ -56,7 +56,6 @@ export class AuthService {
     localStorage.removeItem('token');
 
     // Eliminar los datos del usuario (userData) de localStorage
-    localStorage.removeItem('userData');
 
     // Si estás utilizando Firebase, cerrar sesión en Firebase
     const auth = getAuth();
@@ -76,7 +75,7 @@ export class AuthService {
   }
 
 
-  saveToken(token: string): void {
+  saveToken(token: string) {
     localStorage.setItem('token', token);
 
   }

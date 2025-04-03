@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, Input, signal, ViewChild } from '@angular/core';
 import { finalize, mergeMap, of } from 'rxjs';
 import { LaGotitaConfigService } from '../../util';
-import { InvetoryService } from '../../services';
 import { CurrencyPipe, NgClass } from '@angular/common';
 import { ModalComponent } from '../../components';
 import { TextInitialsPipe } from '../../pipes';
@@ -27,17 +26,17 @@ export class InvetaryDetailsComponent {
 
   public readonly inventario = signal<any | null>(null);
 
-  constructor(private readonly invetary: InvetoryService, public readonly config: LaGotitaConfigService) {}
+  constructor( public readonly config: LaGotitaConfigService) {}
 
   private getInventario(id: string): void {
-    of(this.loading.set(true))
-      .pipe(
-        mergeMap(() => this.invetary.getInventaryById(id)),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe((inventary) => {
-        this.inventario.set(inventary);
+  //   of(this.loading.set(true))
+  //     .pipe(
+  //       mergeMap(() => this.invetary.getInventaryById(id)),
+  //       finalize(() => this.loading.set(false)),
+  //     )
+  //     .subscribe((inventary) => {
+  //       this.inventario.set(inventary);
 
-      });
-  }
+  //     });
+   }
 }

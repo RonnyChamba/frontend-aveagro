@@ -1,0 +1,75 @@
+<nav class="flex flex-col md:flex-row items-center justify-between gap-4 mt-4">
+  <div></div>
+
+
+</nav>
+
+<section>
+  <div class="relative overflow-x-auto">
+    <table class="w-full text-left text-xs">
+      <thead>
+        <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
+          <th class="px-4 py-3">Nombre</th>
+          <th class="px-4 py-3 text-center">Cantidad</th>
+          <th class="px-4 py-3 text-center">U. Medida</th>
+          <th class="px-4 py-3 text-center">Precio Unitario</th>
+
+        </tr>
+      </thead>
+
+      <tbody>
+        @if (listProducts() && listProducts()!.data!.length > 0) {
+          @for (product of listProducts()!.data; track $index) {
+            <tr class="border-b" class="hover:bg-gray-100 cursor-pointer" (click)="addProduct(product)">
+              <th scope="row" class="font-normal p-2">
+                <div class="flex gap-4 items-center">
+                  <div class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase">
+                    {{ product.name | initials }}
+                  </div>
+                  <div>
+                    <p class="font-bold">{{ product.name }}</p>
+
+                    <div class="flex items-center gap-2">
+                      <div class="relative">
+                        {{ product.mainCode }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </th>
+
+              <td class="px-4 py-3 text-center">
+                {{ product.amount }}
+              </td>
+
+              <td class="px-4 py-3 text-center">
+                {{ product.measurementUnit }}
+              </td>
+              <td class="px-4 py-3 text-center">
+                {{ product.price | currency }}
+              </td>
+              <td></td>
+            </tr>
+          }
+        } @else {
+          <tr>
+            <td colspan="100%">
+              <div class="text-center py-9">
+                <p class="text-neutral-400">No se encontraron resultados</p>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+</section>
+<div class="flex gap-4 justify-end mt-10 md:flex-row flex-col text-center max-md:w-full">
+  <button
+    class="items-center gap-2 bg-secondary px-4 py-2 rounded-lg text-white md:flex"
+    (click)="addProducto.emit(null)"
+  >
+    Cerrar
+  </button>
+</div>

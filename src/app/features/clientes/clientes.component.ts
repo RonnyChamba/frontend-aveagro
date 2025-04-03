@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, signal, ViewChild } fro
 import { ModalComponent } from '../../components';
 import { RouterLink } from '@angular/router';
 import { TextInitialsPipe } from '../../pipes';
-import { ClienteService, PedidosService } from '../../services';
+import { PedidosService } from '../../services';
 import { finalize, mergeMap, of, take } from 'rxjs';
 import { NgOptimizedImage } from '@angular/common';
 import { CreateClientesComponent } from '../create-clientes';
@@ -58,15 +58,12 @@ export class ClientesComponent {
   }
 
   getPedidosByCliente() {
-
-    console.log('perdidos');
     of(this.loading.set(true))
       .pipe(
         mergeMap(() => this.pedidoService.getClientes()),
         finalize(() => this.loading.set(false)),
       )
       .subscribe((genericResp) => {
-        console.log(genericResp);
         this.clients.set(genericResp);
       });
   }
@@ -75,7 +72,7 @@ export class ClientesComponent {
     this.getPedidosByCliente();
   }
 
-    
+
   openModalCustomer(type : string, customerId: any){
     this.tipoAction.set(type);
     this.paramCustomerUpdate = {

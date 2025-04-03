@@ -3,7 +3,6 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomInputComponent, CustomSelectComponent, FormErrorMessageComponent } from '../../components';
 import { LaGotitaConfigService, onlyLettersValidator, onlyNumbersDecimalsValidator, onlyNumbersValidator } from '../../util';
 import { NgOptimizedImage } from '@angular/common';
-import { InvetoryService } from '../../services';
 import { of, mergeMap, finalize } from 'rxjs';
 
 @Component({
@@ -40,7 +39,6 @@ export class CreateInventoryComponent {
   constructor(
     public readonly config: LaGotitaConfigService,
     private readonly _fb: FormBuilder,
-    private readonly _inventaryService: InvetoryService,
   ) {}
 
   public readonly form = this._fb.group({
@@ -61,21 +59,21 @@ export class CreateInventoryComponent {
 
     const userForm = this.form.value;
 
-    of(this.loading.set(true))
-      .pipe(
-        mergeMap(() => this._inventaryService.createProducto(userForm)),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe((data) => {
-        this.inventary.emit(data);
-        this.form.reset();
-        this.form.patchValue({
-          nombre: '',
-          descripcion: '',
-          cantidad: '',
-          precio: '',
-          tipo_articulo: '',
-         });
-      });
+    // of(this.loading.set(true))
+    //   .pipe(
+    //     mergeMap(() => this._inventaryService.createProducto(userForm)),
+    //     finalize(() => this.loading.set(false)),
+    //   )
+    //   .subscribe((data) => {
+    //     this.inventary.emit(data);
+    //     this.form.reset();
+    //     this.form.patchValue({
+    //       nombre: '',
+    //       descripcion: '',
+    //       cantidad: '',
+    //       precio: '',
+    //       tipo_articulo: '',
+    //      });
+    //   });
   }
 }

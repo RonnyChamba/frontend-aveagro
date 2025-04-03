@@ -4,7 +4,6 @@ import { CustomInputComponent, CustomSelectComponent, SelectIndustriesComponent 
 import { NgOptimizedImage } from '@angular/common';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize, take } from 'rxjs';
-import { ConfigService, PedidosService } from '../../../../services';
 
 @Component({
   selector: 'app-create-pedido',
@@ -47,10 +46,10 @@ export class CreatePedidoComponent {
     );
   });
   constructor(
-    public readonly pedidoService: PedidosService,
+    // public readonly pedidoService: PedidosService,
     public readonly config: LaGotitaConfigService,
     private readonly _fb: FormBuilder,
-    private readonly configService: ConfigService,
+    // private readonly configService: ConfigService,
   ) {
     const currentDate = new Date();
     this.today.set(`${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`);
@@ -103,16 +102,16 @@ export class CreatePedidoComponent {
   public readonly pedidos = signal<any[]>([]);
 
   public listPedido(): void {
-    this.loading.set(true);
-    this.configService
-      .allPedidos()
-      .pipe(
-        take(1),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe((prendas) => {
-        this.pedidos.set(prendas);
-      });
+    // this.loading.set(true);
+    // this.configService
+    //   .allPedidos()
+    //   .pipe(
+    //     take(1),
+    //     finalize(() => this.loading.set(false)),
+    //   )
+    //   .subscribe((prendas) => {
+    //     this.pedidos.set(prendas);
+    //   });
   }
   get prendas() {
     return this.form.get('prendas') as FormArray;

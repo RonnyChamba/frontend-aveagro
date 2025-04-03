@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, signal, Vie
 import { ModalComponent } from '../../components';
 import { RouterLink } from '@angular/router';
 import { TextInitialsPipe } from '../../pipes';
-import { ClienteService, PedidosService } from '../../services';
+import {  PedidosService } from '../../services';
 import { finalize, mergeMap, of, take } from 'rxjs';
 import { NgOptimizedImage } from '@angular/common';
 import { CreateClientesComponent } from '../create-clientes';
@@ -11,16 +11,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import autoTable from 'jspdf-autotable';
 import jsPDF from 'jspdf';
 import { CreateProductosComponent } from "../create-productos/create-productos.component";
-import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-clientes',
   standalone: true,
   imports: [
     ModalComponent,
-    RouterLink,
-    TextInitialsPipe,
+
     NgOptimizedImage,
-    CreateClientesComponent,
     ClientsNotFoundComponent,
     CreateProductosComponent
 ],
@@ -41,7 +38,6 @@ export class ProductoComponent {
 
   public productIdeUpdate: any= null;
   constructor(
-    private readonly clientService: ClienteService,
     private readonly destroyRef: DestroyRef,
     private readonly pedidoService: PedidosService
   ) {
@@ -89,7 +85,7 @@ export class ProductoComponent {
 
   openNewProducto(type : string, productoIde: any){
     this.tipoAction.set(type);
-    
+
     this.productIdeUpdate = {
       productoIde: productoIde
     };

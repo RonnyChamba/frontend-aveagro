@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TextInitialsPipe } from '../../../../pipes';
-import { ClienteService } from '../../../../services';
 
 @Component({
   selector: 'app-buscar-cliente',
@@ -22,7 +21,7 @@ export class BuscarClienteComponent {
 
   @Output() public readonly clienteSelected = new EventEmitter<any>();
 
-  constructor(private readonly clienteService: ClienteService) {
+  constructor() {
     this.getClientes();
   }
 
@@ -51,11 +50,11 @@ export class BuscarClienteComponent {
     return this.clientes() && this.clientes().length === 0;
   }
   getClientes() {
-    this.clienteService.allClientes().subscribe((clientes) => {
-        // this.clienteSelected.emit(clientes);
-      this.clientes.set(clientes);
-      this.loading.set(false);
-      this.showResults.set(false);
-    });
+    // this.clienteService.allClientes().subscribe((clientes) => {
+    //     // this.clienteSelected.emit(clientes);
+    //   this.clientes.set(clientes);
+    //   this.loading.set(false);
+    //   this.showResults.set(false);
+    // });
   }
 }

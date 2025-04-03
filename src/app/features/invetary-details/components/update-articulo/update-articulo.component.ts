@@ -12,7 +12,6 @@ import {
 import { ReactiveFormsModule, FormsModule, FormBuilder, Validators } from '@angular/forms';
 import { of, mergeMap, finalize } from 'rxjs';
 import { CustomInputComponent, CustomSelectComponent, FormErrorMessageComponent } from '../../../../components';
-import { InvetoryService } from '../../../../services';
 import { LaGotitaConfigService, onlyLettersValidator, onlyNumbersValidator } from '../../../../util';
 
 @Component({
@@ -54,7 +53,6 @@ export class UpdateArticuloComponent implements OnInit {
   constructor(
     public readonly config: LaGotitaConfigService,
     private readonly _fb: FormBuilder,
-    private readonly _inventaryService: InvetoryService,
   ) {}
   ngOnInit(): void {
     this.syncForm();
@@ -86,15 +84,15 @@ export class UpdateArticuloComponent implements OnInit {
       tipo_articulo: this.form.controls.tipo_articulo.value,
     };
 
-    of(this.loading.set(true))
-      .pipe(
-        mergeMap(() =>
-          this._inventaryService.updateInventario(this.id, {
-            ...userForm,
-          }),
-        ),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe(()=> this.inventary.emit(userForm));
+    // of(this.loading.set(true))
+    //   .pipe(
+    //     mergeMap(() =>
+    //       this._inventaryService.updateInventario(this.id, {
+    //         ...userForm,
+    //       }),
+    //     ),
+    //     finalize(() => this.loading.set(false)),
+    //   )
+    //   .subscribe(()=> this.inventary.emit(userForm));
   }
 }

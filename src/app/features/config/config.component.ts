@@ -3,14 +3,13 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalComponent } from '../../components';
 import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { AggPrendaComponent } from './components';
-import { ConfigService } from '../../services';
 import { finalize, mergeMap, of, take } from 'rxjs';
 import { TextInitialsPipe } from '../../pipes';
 
 @Component({
   selector: 'app-config',
   standalone: true,
-  imports: [ReactiveFormsModule, ModalComponent, NgOptimizedImage, AggPrendaComponent, CurrencyPipe, TextInitialsPipe],
+  imports: [ReactiveFormsModule, ModalComponent, NgOptimizedImage, CurrencyPipe, TextInitialsPipe],
   templateUrl: './config.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,7 +21,7 @@ export class ConfigComponent {
 
   public readonly dataFlotante= signal<string>('');
 
-  constructor(private readonly configService: ConfigService) {
+  constructor() {
     this.getPrendas();
   }
 
@@ -31,26 +30,26 @@ export class ConfigComponent {
   }
 
   getPrendas(): void {
-    this.loading.set(true);
-    this.configService
-      .allPedidos()
-      .pipe(
-        take(1),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe((prendas) => {
-        this.prenda.set(prendas);
-      });
+    // this.loading.set(true);
+    // this.configService
+    //   .allPedidos()
+    //   .pipe(
+    //     take(1),
+    //     finalize(() => this.loading.set(false)),
+    //   )
+    //   .subscribe((prendas) => {
+    //     this.prenda.set(prendas);
+    //   });
   }
 
   deletePenda(id: string): void {
-    of(this.loading.set(true))
-      .pipe(
-        mergeMap(() => this.configService.deletePrenda(id)),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe(() => {
-        this.getPrendas();
-      });
+    // of(this.loading.set(true))
+    //   .pipe(
+    //     mergeMap(() => this.configService.deletePrenda(id)),
+    //     finalize(() => this.loading.set(false)),
+    //   )
+    //   .subscribe(() => {
+    //     this.getPrendas();
+    //   });
   }
 }

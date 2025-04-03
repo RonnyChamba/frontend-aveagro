@@ -1,0 +1,101 @@
+<div class="p-5">
+  <div class="rounded-2xl shadow bg-white p-6">
+    <nav class="flex gap-4 justify-between items-center flex-wrap md:flex-row flex-col">
+      <!-- Search -->
+      <div class="bg-stone-100 w-full md:max-w-96 flex h-11 items-center rounded-2xl ps-4 gap-4">
+        <label for="searchApp" class="relative size-4 shrink-0"><img ngSrc="/assets/icons/search.svg" alt="Search"
+            fill /></label>
+        <input type="text" id="searchApp" placeholder="buscar" class="bg-transparent grow h-full px-2" />
+        <!-- (keyup.enter)="this.searchService.updateQuery(search)" -->
+      </div>
+      <div class="flex items-center gap-4 max-md:w-full">
+        <div class="space-y-4">
+
+
+
+            <div  class="flex gap-2">
+              <input type="date" [(ngModel)]="tempStartDate" class="px-2 py-1 border rounded-md" />
+            <input type="date" [(ngModel)]="tempEndDate" class="px-2 py-1 border rounded-md" />
+            <button (click)="addDates()" class="px-4 py-2 bg-red-600 text-white rounded-md">
+              Confirmar
+            </button>
+          </div>
+
+        </div>
+
+
+
+      </div>
+
+
+    </nav>
+
+    <hr class="my-4" />
+    <section>
+      <div class="relative overflow-x-auto">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
+              <th scope="col">Nombre</th>
+              <th scope="col">Identificación</th>
+              <th scope="col">Direccion</th>
+              <th scope="col">Total</th>
+            </tr>
+          </thead>
+          @if (loading()) {
+          <tbody>
+            <td colspan="100%">
+              <div class="text-center py-9">
+                <div class="loader"></div>
+              </div>
+            </td>
+          </tbody>
+          } @else { @if (dataDoc() && dataDoc().data.length > 0) {
+          <tbody>
+            @for (inventary of dataDoc().data; track inventary.id) {
+            <tr
+              class="bg-white border-b border-dashed border-neutral-200 *:px-6 *:py-4 *:whitespace-nowrap [&>th]:ps-0">
+              <th scope="row" class="font-normal">
+                <a>
+                  <div class="flex gap-4 items-center">
+                    <div class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase">
+                      {{ inventary.name | initials }}
+                    </div>
+                    <div>
+                      <p class="font-bold">{{ inventary.name }}</p>
+                    </div>
+                  </div>
+                </a>
+              </th>
+              <td>
+                {{ inventary.dni }}
+              </td>
+              <td>
+
+                {{ inventary.address }}
+
+              </td>
+              <td>{{ inventary.total | currency }}</td>
+
+              <td>
+                <button class="bg-blue-500 rounded-lg p-3 inline-block cursor-pointer"
+                  (click)="descargarReporte(inventary.id)"
+                >
+                  <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 15v2a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-2m-8 1V4m0 12-4-4m4 4 4-4" />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+            }
+          </tbody>
+          } }
+        </table>
+      </div>
+
+
+    </section>
+  </div>
+</div>

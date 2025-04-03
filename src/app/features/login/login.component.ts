@@ -23,18 +23,17 @@ export class LoginComponent {
   ) {}
 
   public form = this._fb.group({
-    email: ['1723774611', [Validators.required]],
-    password: ['1234567', [Validators.required, Validators.minLength(6)]],
+    email: ['', [Validators.required]],
+    password: ['', [Validators.required, ]],
   });
 
    submit() {
 
     if (this.form.invalid) {
-      console.log("invalido");
       this.form.markAllAsTouched();
       return;
     }
-    
+
     const req = {
       username: this.form.value.email,
       password: this.form.value.password

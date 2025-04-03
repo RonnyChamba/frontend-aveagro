@@ -8,7 +8,7 @@ import { PedidosComponent } from './components/pedidos';
 @Component({
   selector: 'app-create-pedido',
   standalone: true,
-  imports: [ModalComponent, StepComponent, NgOptimizedImage, BuscarClienteComponent, PedidosComponent],
+  imports: [ModalComponent, StepComponent, NgOptimizedImage, PedidosComponent],
   templateUrl: './create-pedido.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core';
 import { of, mergeMap, finalize } from 'rxjs';
 import { LaGotitaConfigService } from '../../util';
-import { ClienteService, PedidosService } from '../../services';
 import { TextInitialsPipe } from '../../pipes';
 import { ModalComponent } from '../../components';
 import { CreatePedidoComponent, PedidosDetailsComponent, UpdateClientComponent } from './components';
@@ -28,19 +27,19 @@ export class ClientesDetailsComponent {
   public readonly client = signal<any | null>(null);
 
   constructor(
-    private readonly _clienteService: ClienteService,
+    // private readonly _clienteService: ClienteService,
     public readonly congfi: LaGotitaConfigService,
   ) {}
 
   public getClient(id: string): void {
-    of(this.loading.set(true))
-      .pipe(
-        mergeMap(() => this._clienteService.getClientes(id)),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe((client) => {
-        this.client.set(client);
-      });
+    // of(this.loading.set(true))
+    //   .pipe(
+    //     mergeMap(() => this._clienteService.getClientes(id)),
+    //     finalize(() => this.loading.set(false)),
+    //   )
+    //   .subscribe((client) => {
+    //     this.client.set(client);
+    //   });
   }
 
 }

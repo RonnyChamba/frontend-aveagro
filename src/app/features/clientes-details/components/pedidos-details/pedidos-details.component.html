@@ -145,11 +145,11 @@
         </button>
       </header>
       <section class="p-4">
-        <app-create-pedido
+        <!-- <app-create-pedido
           [id]="idCliente()"
           (newPedidos)="createPedido.close()"
           (newPedidos)="$event && createProducto($event)"
-        />
+        /> -->
       </section>
     </div>
   </div>
@@ -174,11 +174,11 @@
       </header>
       <section class="p-4">
         @if (viewing(); as editPedidos ) {
-        <app-edit-pedido
+        <!-- <app-edit-pedido
           [editarPedido]="editPedidos"
           (editPedido)="editPedido.close()"
           (editPedido)="$event && updatePedido($event); viewing.set(null)"
-        />
+        /> -->
         }
       </section>
     </div>

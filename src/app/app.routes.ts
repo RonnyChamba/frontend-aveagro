@@ -15,7 +15,7 @@ export const routes: Routes & {
   },
   {
     path: 'dashboard',
-    // canActivate: [authGuard],
+    canActivate: [authGuard],
     loadComponent() {
       return import('./layout/layout.component').then((m) => m.LayoutComponent);
     },
@@ -26,6 +26,14 @@ export const routes: Routes & {
         data: {
           icon: '/assets/icons/edit.svg',
           name: 'Nueva Venta',
+        },
+      },
+      {
+        path:'doc',
+        loadChildren: () => import('./features/doc/routes'),
+        data: {
+          icon: 'assets/icons/pdf.svg',
+          name: 'Documentos',
         },
       },
       {
@@ -48,19 +56,19 @@ export const routes: Routes & {
         path: 'productos',
         loadChildren: () => import('./features/productos/routes'),
         data: {
-          icon: 'assets/icons/menu_contacts.svg',
+          icon: 'assets/icons/compra.svg',
           name: 'Productos',
         },
       },
 
-      {
-        path: 'invetory',
-        loadChildren: () => import('./features/invetory/routes'),
-        data: {
-          icon: '/assets/icons/iventory.svg',
-          name: 'Inventario',
-        },
-      },
+      // {
+      //   path: 'invetory',
+      //   loadChildren: () => import('./features/invetory/routes'),
+      //   data: {
+      //     icon: '/assets/icons/iventory.svg',
+      //     name: 'Inventario',
+      //   },
+      // },
       {
         path: 'users',
         loadChildren: () => import('./features/user/routes'),

@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output, signal } from
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomInputComponent } from '../../../../components';
 import { finalize, mergeMap, of } from 'rxjs';
-import { ConfigService } from '../../../../services';
 import { ObjectId, onlyLettersValidator, onlyNumbersDecimalsValidator, onlyNumbersValidator } from '../../../../util';
 
 @Component({
@@ -18,7 +17,7 @@ export class AggPrendaComponent {
 
   @Output() prenda = new EventEmitter<any | null>();
 
-  constructor(private readonly _fb: FormBuilder, private readonly configService: ConfigService) {}
+  constructor(private readonly _fb: FormBuilder) {}
 
   public readonly form = this._fb.group({
     nombre_prenda: ['', [Validators.required, onlyLettersValidator(), Validators.maxLength(50)],],
@@ -35,19 +34,19 @@ export class AggPrendaComponent {
       id: ObjectId(),
     };
 
-    of(this.loading.set(true))
-      .pipe(
-        mergeMap(() => this.configService.createPrenda(prenda)),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe((data) => {
-        this.prenda.emit(data);
-        this.form.reset();
-        this.form.setValue({
-          nombre_prenda: '',
-          precio: 0,
-          tiempo_lavado: 0,
-        });
-      });
+    // of(this.loading.set(true))
+    //   .pipe(
+    //     mergeMap(() => this.configService.createPrenda(prenda)),
+    //     finalize(() => this.loading.set(false)),
+    //   )
+    //   .subscribe((data) => {
+    //     this.prenda.emit(data);
+    //     this.form.reset();
+    //     this.form.setValue({
+    //       nombre_prenda: '',
+    //       precio: 0,
+    //       tiempo_lavado: 0,
+    //     });
+    //   });
   }
 }

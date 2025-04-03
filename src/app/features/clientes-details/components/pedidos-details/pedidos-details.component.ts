@@ -13,7 +13,7 @@ import autoTable from 'jspdf-autotable';
 @Component({
   selector: 'app-pedidos-details',
   standalone: true,
-  imports: [NgClass, CustomDatePipe, NgOptimizedImage, ModalComponent, CreatePedidoComponent, EditPedidoComponent, CurrencyPipe],
+  imports: [NgClass, CustomDatePipe, NgOptimizedImage, ModalComponent,  CurrencyPipe],
   templateUrl: './pedidos-details.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,62 +51,62 @@ export class PedidosDetailsComponent {
   }
 
   getPedidos(id: string): void {
-    of(this.loading.set(true))
-      .pipe(
-        mergeMap(() => this.pedidosService.getPedidosByCliente(id)),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe((pedidos) => {
-        const pedidosFiltrados = pedidos.filter((pedido) => pedido.estado !== 'FINALIZADO');
-        this.pedidos.set(pedidosFiltrados);
-        console.log('pedidos', pedidosFiltrados);
-      });
+    // of(this.loading.set(true))
+    //   .pipe(
+    //     mergeMap(() => this.pedidosService.getPedidosByCliente(id)),
+    //     finalize(() => this.loading.set(false)),
+    //   )
+    //   .subscribe((pedidos) => {
+    //     const pedidosFiltrados = pedidos.filter((pedido) => pedido.estado !== 'FINALIZADO');
+    //     this.pedidos.set(pedidosFiltrados);
+    //     console.log('pedidos', pedidosFiltrados);
+    //   });
   }
 
   removePedido(): void {
-    of(this.loading.set(true))
-      .pipe(
-        mergeMap(() => this.pedidosService.removePedido(this.idCliente(), this.idPedido())),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe(() => {
-        this.getPedidos(this.idCliente());
-      });
+    // of(this.loading.set(true))
+    //   .pipe(
+    //     mergeMap(() => this.pedidosService.removePedido(this.idCliente(), this.idPedido())),
+    //     finalize(() => this.loading.set(false)),
+    //   )
+    //   .subscribe(() => {
+    //     this.getPedidos(this.idCliente());
+    //   });
   }
 
   createProducto(pedido: any): void {
-    of(this.loading.set(true))
-      .pipe(
-        mergeMap(() => this.pedidosService.createPedido(pedido, this.idCliente())),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe(() => {
-        this.getPedidos(this.idCliente());
-      });
+    // of(this.loading.set(true))
+    //   .pipe(
+    //     mergeMap(() => this.pedidosService.createPedido(pedido, this.idCliente())),
+    //     finalize(() => this.loading.set(false)),
+    //   )
+    //   .subscribe(() => {
+    //     this.getPedidos(this.idCliente());
+    //   });
   }
 
   updatePedido(pedido: any): void {
-    of(this.loading.set(true))
-      .pipe(
-        mergeMap(() => this.pedidosService.updatePedido(this.idCliente(), pedido.id, pedido)),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe(() => {
-        this.getPedidos(this.idCliente());
-      });
+    // of(this.loading.set(true))
+    //   .pipe(
+    //     mergeMap(() => this.pedidosService.updatePedido(this.idCliente(), pedido.id, pedido)),
+    //     finalize(() => this.loading.set(false)),
+    //   )
+    //   .subscribe(() => {
+    //     this.getPedidos(this.idCliente());
+    //   });
   }
 
   finalizarPedido(pedidoid: string): void {
     const cambios = { estado: 'FINALIZADO', updated: Date.now() };
 
-    of(this.loading.set(true))
-      .pipe(
-        mergeMap(() => this.pedidosService.updatePedido(this.idCliente(), pedidoid, cambios)),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe(() => {
-        this.getPedidos(this.idCliente());
-      });
+    // of(this.loading.set(true))
+    //   .pipe(
+    //     mergeMap(() => this.pedidosService.updatePedido(this.idCliente(), pedidoid, cambios)),
+    //     finalize(() => this.loading.set(false)),
+    //   )
+    //   .subscribe(() => {
+    //     this.getPedidos(this.idCliente());
+    //   });
   }
 
   public downloadPDF(data: any) {

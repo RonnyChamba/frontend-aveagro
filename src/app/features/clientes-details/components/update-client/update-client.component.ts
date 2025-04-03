@@ -12,7 +12,6 @@ import {
 import { ReactiveFormsModule, Validators, FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { Subject, takeUntil, of, mergeMap, finalize } from 'rxjs';
 import { CustomInputComponent, CustomSelectComponent } from '../../../../components';
-import { ClienteService } from '../../../../services';
 import {
   onlyLettersValidator,
   LaGotitaConfigService,
@@ -89,7 +88,6 @@ export class UpdateClientComponent implements OnInit {
   constructor(
     private readonly _fb: FormBuilder,
     private readonly config: LaGotitaConfigService,
-    private readonly _clientService: ClienteService,
     private readonly identificationService: IdentificationValidatorService,
   ) {}
 
@@ -135,17 +133,17 @@ export class UpdateClientComponent implements OnInit {
       phones: this.form.value.phones!.map((phone: any) => phone.phone),
     };
 
-    of(this.loading.set(true))
-      .pipe(
-        mergeMap(() =>
-          this._clientService.updateClientes(this.id, {
-            ...updateClient,
-          }),
-        ),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe(() => {
-        this.client.emit(updateClient);
-      });
+    // of(this.loading.set(true))
+    //   .pipe(
+    //     mergeMap(() =>
+    //       this._clientService.updateClientes(this.id, {
+    //         ...updateClient,
+    //       }),
+    //     ),
+    //     finalize(() => this.loading.set(false)),
+    //   )
+    //   .subscribe(() => {
+    //     this.client.emit(updateClient);
+    //   });
   }
 }

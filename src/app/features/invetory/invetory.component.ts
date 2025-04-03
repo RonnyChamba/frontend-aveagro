@@ -6,7 +6,7 @@ import { ModalComponent } from '../../components';
 import { CreateInventoryComponent } from '../create-inventory';
 import { LaGotitaConfigService, SearchService } from '../../util';
 import { WithSearchable } from '../../util/mixins';
-import { InvetoryService } from '../../services';
+import {  PedidosService } from '../../services';
 import { finalize, mergeMap, of, take } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NotInvetaryFoundComponent } from './components';
@@ -23,7 +23,7 @@ import autoTable from 'jspdf-autotable';
     NgClass,
     NgOptimizedImage,
     ModalComponent,
-    CreateInventoryComponent,
+     CreateInventoryComponent,
     NotInvetaryFoundComponent,
   ],
   templateUrl: './invetory.component.html',
@@ -49,29 +49,29 @@ export class InvetoryComponent extends WithSearchable implements OnInit {
   }
 
   constructor(
-    private readonly inventaryService: InvetoryService,
     public readonly config: LaGotitaConfigService,
     private readonly destroyRef: DestroyRef,
+    private readonly generalService: PedidosService
   ) {
     super();
   }
 
   public deleteInvetario(id: string): void {
-    of(this.loading.set(true))
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        mergeMap(() => this.inventaryService.deleteInvetario(id)),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe(() => {
-        this.searchBanks();
-      });
+    // of(this.loading.set(true))
+    //   .pipe(
+    //     takeUntilDestroyed(this.destroyRef),
+    //     mergeMap(() => this.inventaryService.deleteInvetario(id)),
+    //     finalize(() => this.loading.set(false)),
+    //   )
+    //   .subscribe(() => {
+    //     this.searchBanks();
+    //   });
   }
 
   private searchBanks(): void {
     this.loading.set(true);
-    this.inventaryService
-      .searchInventary()
+    this.generalService
+      .getProductos()
       .pipe(
         take(1),
         finalize(() => this.loading.set(false)),

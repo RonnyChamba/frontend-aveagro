@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, Validators, FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { take, finalize } from 'rxjs';
-import { PedidosService, ConfigService } from '../../../../services';
+import { PedidosService } from '../../../../services';
 import { LaGotitaConfigService } from '../../../../util';
 import { CustomInputComponent, CustomSelectComponent } from '../../../../components';
 
@@ -79,7 +79,7 @@ export class EditPedidoComponent implements OnInit {
     public readonly pedidoService: PedidosService,
     public readonly config: LaGotitaConfigService,
     private readonly _fb: FormBuilder,
-    private readonly configService: ConfigService,
+    // private readonly configService: ConfigService,
   ) {
     const currentDate = new Date();
     this.today.set(`${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`);
@@ -138,16 +138,16 @@ export class EditPedidoComponent implements OnInit {
   public readonly pedidos = signal<any[]>([]);
 
   public listPedido(): void {
-    this.loading.set(true);
-    this.configService
-      .allPedidos()
-      .pipe(
-        take(1),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe((prendas) => {
-        this.pedidos.set(prendas);
-      });
+    // this.loading.set(true);
+    // this.configService
+    //   .allPedidos()
+    //   .pipe(
+    //     take(1),
+    //     finalize(() => this.loading.set(false)),
+    //   )
+    //   .subscribe((prendas) => {
+    //     this.pedidos.set(prendas);
+    //   });
   }
 
   onPedidoSelect(event: Event, index: number) {
