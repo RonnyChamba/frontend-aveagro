@@ -149,15 +149,14 @@ export class PedidosService {
   }
 
 
-  geraraReporte(payload:any): Observable<any> {
+  geraraReporte(payload:any): Observable<Blob> {
     const request = {
       origin: "App",
       usrRequest: "Veagro",
       payload
     }
     console.log(request);
-    return this.httpClient.post(environment.urlMsVeagro + "/reportes/generar",  {
-      request,
+    return this.httpClient.post<Blob>(environment.urlMsVeagro + "/reportes/generar", request,  {
      responseType: 'blob' as 'json'
     } );
   }
