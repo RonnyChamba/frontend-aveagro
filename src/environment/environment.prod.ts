@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  urlMsVeagro:"https://dev.olimpush.com/apiveagro",
   firebase: {
     apiKey: "AIzaSyAIeyD37PibTTWW0_b2FVnPE8MvLnPV16U",
     authDomain: "la-gotita-2024.firebaseapp.com",
