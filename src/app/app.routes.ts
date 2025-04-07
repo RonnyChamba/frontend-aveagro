@@ -98,7 +98,7 @@ export const routes: Routes & {
 
       {
         path: '**',
-        redirectTo: 'pedidos',
+        redirectTo: 'inicio',
         pathMatch: 'full',
       },
     ],
