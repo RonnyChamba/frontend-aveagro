@@ -1,4 +1,5 @@
 <div class="p-5">
+
   <div class="rounded-2xl shadow bg-white p-6">
     <nav class="flex gap-4 justify-between items-center flex-wrap md:flex-row flex-col">
       <!-- Search -->
@@ -6,7 +7,7 @@
         <label for="searchApp" class="relative size-4 shrink-0"
           ><img ngSrc="/assets/icons/search.svg" alt="Search" fill
         /></label>
-        <input type="text" id="searchApp" placeholder="buscar" class="bg-transparent grow h-full px-2" />
+        <input type="text" id="searchApp" placeholder="buscar" [formControl]="searchControl" class="bg-transparent grow h-full px-2" />
       </div>
 
       <div class="max-md:w-full">
@@ -19,7 +20,6 @@
         </button>
       </div>
     </nav>
-
     <hr class="my-4" />
     <section>
       <div class="relative overflow-x-auto">
@@ -42,9 +42,9 @@
               </div>
             </td>
           </tbody>
-          } @else { @if (clients() && clients()!.data!.length > 0) {
+          } @else { @if (filteredClients && filteredClients.length) {
           <tbody>
-            @for (client of clients().data; track client.id) {
+            @for (client of filteredClients; track client.id) {
             <tr
               class="bg-white border-b border-dashed border-neutral-200 *:px-6 *:py-4 *:whitespace-nowrap [&>th]:ps-0"
             >
@@ -73,9 +73,9 @@
               </td>
 
               <td>
-              
+
                 {{client.email }}
-                
+
               </td>
               <td class="m-2">
                 <button

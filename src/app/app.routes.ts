@@ -21,6 +21,14 @@ export const routes: Routes & {
     },
     children: [
       {
+        path: 'inicio',
+        loadChildren: () => import('./features/dashboard/routes'),
+        data: {
+          icon: 'assets/icons/inicio.svg',
+          name: 'Inicio',
+        },
+      },
+      {
         path: 'pedidos',
         loadChildren: () => import('./features/pedidos/routes'),
         data: {

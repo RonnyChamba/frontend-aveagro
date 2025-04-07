@@ -8,6 +8,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { CreateUserComponent } from '../create-user';
 import { CreateClientesComponent } from '../create-clientes/create-clientes.component';
 import { NotUserFoundComponent } from './components';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-user',
@@ -19,6 +20,7 @@ import { NotUserFoundComponent } from './components';
     NgOptimizedImage,
     CreateUserComponent,
     NotUserFoundComponent,
+    ReactiveFormsModule
   ],
   templateUrl: './user.component.html',
   styles: ``,
@@ -30,6 +32,8 @@ export class UserComponent {
   public readonly dataFlotante = signal<string>('');
 
   public readonly users = signal<any | null>(null);
+  filteredUser: any[] = [];
+    searchControl = new FormControl('');
 
     @ViewChild('newusersModal') productoModal!: ModalComponent;
 
@@ -41,6 +45,18 @@ export class UserComponent {
     private readonly pedidoService: PedidosService
   ) {
     this.getUsers();
+
+    this.searchControl.valueChanges.subscribe((value) => {
+      const searchText = value?.toString().trim().toLowerCase() || '';
+
+      // Si el campo de búsqueda está vacío, muestra todos los clientes
+      this.filteredUser = searchText
+        ? this.users().data.filter((user: any) =>
+            user.name.toLowerCase().includes(searchText) ||
+            user.dni.toLowerCase().includes(searchText)
+          )
+        : this.users().data;
+    });
   }
 
   public deleteUsuario(id: string): void {
@@ -66,7 +82,7 @@ export class UserComponent {
       .subscribe((genericResDTO) => {
         console.log(genericResDTO);
         this.users.set(genericResDTO);
-
+        this.filteredUser = genericResDTO.data;
       });
   }
 
@@ -78,7 +94,7 @@ export class UserComponent {
 
   openNewUser(type : string, userIde: any){
     this.tipoAction.set(type);
-    
+
     this.paramUserUpdate = {
       userIde
     };

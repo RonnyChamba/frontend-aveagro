@@ -1,15 +1,16 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal, ViewChild } from '@angular/core';
 import { ModalComponent } from '../../components';
 import { RouterLink } from '@angular/router';
 import { TextInitialsPipe } from '../../pipes';
 import { PedidosService } from '../../services';
-import { finalize, mergeMap, of, take } from 'rxjs';
-import { NgOptimizedImage } from '@angular/common';
+import { finalize, mergeMap, of, take, takeUntil } from 'rxjs';
+import { JsonPipe, NgOptimizedImage } from '@angular/common';
 import { CreateClientesComponent } from '../create-clientes';
 import { ClientsNotFoundComponent } from './components';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import autoTable from 'jspdf-autotable';
 import jsPDF from 'jspdf';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-clientes',
@@ -21,6 +22,8 @@ import jsPDF from 'jspdf';
     NgOptimizedImage,
     CreateClientesComponent,
     ClientsNotFoundComponent,
+    ReactiveFormsModule,
+    JsonPipe
   ],
   templateUrl: './clientes.component.html',
   styles: ``,
@@ -36,14 +39,31 @@ export class ClientesComponent {
   public readonly tipoAction = signal<string | null>('nuevo');
   @ViewChild('newClientModal') productoModal!: ModalComponent;
 
-  public paramCustomerUpdate: any= null;
+  public paramCustomerUpdate: any = null;
+
+  searchControl = new FormControl('');
+
+  filteredClients: any[] = [];
 
   constructor(
     private readonly destroyRef: DestroyRef,
     private readonly pedidoService: PedidosService,
   ) {
     this.getPedidosByCliente();
+    this.searchControl.valueChanges.subscribe((value) => {
+      const searchText = value?.toString().trim().toLowerCase() || '';
+
+      // Si el campo de búsqueda está vacío, muestra todos los clientes
+      this.filteredClients = searchText
+        ? this.clients().data.filter((client: any) =>
+            client.name.toLowerCase().includes(searchText) ||
+            client.dni.toLowerCase().includes(searchText)
+          )
+        : this.clients().data;
+    });
+
   }
+
 
   public deleteClient(id: string): void {
     of(this.loading.set(true))
@@ -53,7 +73,7 @@ export class ClientesComponent {
         finalize(() => this.loading.set(false)),
       )
       .subscribe(() => {
-      this.getPedidosByCliente();
+        this.getPedidosByCliente();
       });
   }
 
@@ -65,6 +85,7 @@ export class ClientesComponent {
       )
       .subscribe((genericResp) => {
         this.clients.set(genericResp);
+        this.filteredClients = genericResp.data;
       });
   }
 
@@ -73,7 +94,7 @@ export class ClientesComponent {
   }
 
 
-  openModalCustomer(type : string, customerId: any){
+  openModalCustomer(type: string, customerId: any) {
     this.tipoAction.set(type);
     this.paramCustomerUpdate = {
       customerId: customerId

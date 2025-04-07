@@ -11,12 +11,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import autoTable from 'jspdf-autotable';
 import jsPDF from 'jspdf';
 import { CreateProductosComponent } from "../create-productos/create-productos.component";
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'app-clientes',
   standalone: true,
   imports: [
     ModalComponent,
-
+    ReactiveFormsModule,
     NgOptimizedImage,
     ClientsNotFoundComponent,
     CreateProductosComponent
@@ -30,7 +31,8 @@ export class ProductoComponent {
 
   public readonly clients = signal<any | null>(null);
   public readonly tipoAction = signal<string | null>('nuevo');
-
+filteredProduct: any[] = [];
+    searchControl = new FormControl('');
   @ViewChild('newClientModal') productoModal!: ModalComponent;
 
 
@@ -42,6 +44,18 @@ export class ProductoComponent {
     private readonly pedidoService: PedidosService
   ) {
     this.getPedidosByCliente();
+
+    this.searchControl.valueChanges.subscribe((value) => {
+      const searchText = value?.toString().trim().toLowerCase() || '';
+
+      // Si el campo de búsqueda está vacío, muestra todos los clientes
+      this.filteredProduct = searchText
+        ? this.clients().data.filter((user: any) =>
+            user.name.toLowerCase().includes(searchText)
+
+          )
+        : this.clients().data;
+    });
   }
 
   public deleteClient(id: string): void {
@@ -64,9 +78,8 @@ export class ProductoComponent {
         finalize(() => this.loading.set(false)),
       )
       .subscribe((clientes) => {
-        console.log(clientes);
-        console.log("Productos");
-        this.clients.set(clientes.data);
+      this.filteredProduct = clientes.data;
+        this.clients.set(clientes);
       });
   }
 

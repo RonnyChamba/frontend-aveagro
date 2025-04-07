@@ -6,7 +6,9 @@
         <label for="searchApp" class="relative size-4 shrink-0"
           ><img ngSrc="/assets/icons/search.svg" alt="Search" fill
         /></label>
-        <input type="text" id="searchApp" placeholder="buscar" class="bg-transparent grow h-full px-2" />
+        <input type="text" id="searchApp" placeholder="buscar" class="bg-transparent grow h-full px-2"
+          [formControl]="searchControl"
+        />
       </div>
 
       <div class="max-md:w-full">
@@ -41,9 +43,9 @@
               </div>
             </td>
           </tbody>
-          } @else { @if (users() && users()!.data!.length > 0) {
+          } @else { @if (filteredUser && filteredUser.length > 0) {
           <tbody>
-            @for (users of users().data; track users.id) {
+            @for (users of filteredUser; track users.id) {
             <tr
               class="bg-white border-b border-dashed border-neutral-200 *:px-6 *:py-4 *:whitespace-nowrap [&>th]:ps-0"
             >
@@ -65,7 +67,7 @@
               <td>
                 {{ users.rolName }}
               </td>
-    
+
               <td>
                 {{ users.email }}
               </td>
