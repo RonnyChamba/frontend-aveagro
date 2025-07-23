@@ -51,7 +51,8 @@ filteredProduct: any[] = [];
       // Si el campo de búsqueda está vacío, muestra todos los clientes
       this.filteredProduct = searchText
         ? this.clients().data.filter((user: any) =>
-            user.name.toLowerCase().includes(searchText)
+            user.name.toLowerCase().includes(searchText) || 
+            user.mainCode.toLowerCase().includes(searchText)
 
           )
         : this.clients().data;
@@ -78,6 +79,7 @@ filteredProduct: any[] = [];
         finalize(() => this.loading.set(false)),
       )
       .subscribe((clientes) => {
+        console.log(clientes);
       this.filteredProduct = clientes.data;
         this.clients.set(clientes);
       });
