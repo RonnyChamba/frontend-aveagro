@@ -1,6 +1,7 @@
 export const environment = {
   production: false,
-  urlMsVeagro:"https://dev.olimpush.com/apiveagro",
+  // urlMsVeagro:"https://dev.olimpush.com/apiveagro",
+  urlMsVeagro:"https://localhost:7182",
   version: '1.2.0',
   firebase: {
     apiKey: "AIzaSyAIeyD37PibTTWW0_b2FVnPE8MvLnPV16U",
