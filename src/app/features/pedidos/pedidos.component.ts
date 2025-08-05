@@ -50,6 +50,7 @@ export class PedidosComponent {
         finalize(() => this.loading.set(false)),
       )
       .subscribe(() => {
+        console.log('Cliente seleccionado:', cliente);
         this.selectedCliente.set(cliente);
         this.dropdownOpen.set(false);
 
@@ -191,6 +192,7 @@ export class PedidosComponent {
       subtotal: p.valorTotal
     }));
 
+    console.log('Cliente:', this.selectedCliente());
     const data = {
       products: productos,
       total: this.totalPago(),
@@ -200,9 +202,12 @@ export class PedidosComponent {
         address: this.selectedCliente().address,
         email: this.selectedCliente().email,
         cellphone: this.selectedCliente().cellphone,
+        idCustomer: this.selectedCliente()?.id || 0,
       }
     };
 
+
+    //return;
     Swal.fire({
       title: "¿Confirmar venta?",
       text: "¿Estás seguro de que quieres guardar esta venta?",

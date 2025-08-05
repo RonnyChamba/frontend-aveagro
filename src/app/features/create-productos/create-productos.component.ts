@@ -99,6 +99,7 @@ export class CreateProductosComponent implements OnInit {
     name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]],
     mainCode: ['', [Validators.required]],
     auxiliaryCode: ['', []],
+    description: ['', []],
     price: ['', [Validators.required]],
     amount: ['', Validators.required],
     measurementUnit: ['', Validators.required]

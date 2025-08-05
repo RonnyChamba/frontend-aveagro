@@ -7,9 +7,9 @@
     <div class="mb-3">
       <app-custom-input formControlName="mainCode" label="C. Principal" />
     </div>
-    <div class="mb-3">
+    <!-- <div class="mb-3">
       <app-custom-input formControlName="auxiliaryCode" label="C. Auxiliar" />
-    </div>
+    </div> -->
 
     <div class="mb-3">
       <app-custom-input formControlName="price" [type]="'number'"  label="Precio" />
@@ -25,6 +25,11 @@
         [options]="listUnidades"
         [labels]="listUnidades"
       />
+    </div>
+
+     <div class="mb-3">
+      <!-- <textarea    style="width: 100%;" class="form-control"   class="form-input" formControlName="description" id="" placeholder="Descripcion"></textarea> -->
+      <app-custom-input formControlName="description"  label="Descripcion" />
     </div>
 
   </div>
