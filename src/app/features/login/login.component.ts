@@ -3,6 +3,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services';
 import { catchError, finalize, mergeMap, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { MessageServiceAlert } from '../../services/message.service';
 
 
 @Component({
@@ -20,6 +22,7 @@ export class LoginComponent {
     private readonly _fb: FormBuilder,
     private readonly _authService: AuthService,
     private readonly router: Router,
+    private readonly messageService: MessageServiceAlert
   ) {}
 
   public form = this._fb.group({
@@ -34,7 +37,11 @@ export class LoginComponent {
       return;
     }
 
-    const req = {
+    this.messageService.loadingConMensaje(true, 'Validando credenciales...');
+
+   setTimeout(() => {
+
+const req = {
       username: this.form.value.email,
       password: this.form.value.password
     }
@@ -44,14 +51,18 @@ export class LoginComponent {
 
           const tokenJwt = resp.data?.token;
           this._authService.saveToken(tokenJwt);
+          this.messageService.loadingConMensaje(false);
           this.router.navigate(['/dashboard']);
-
         }),
         catchError((error: any) => {
           console.log(error);
+          this.messageService.mensajeErrorTitulo(error.error?.message ?? 'Error', 'No se pudo iniciar sesión, verifique sus credenciales.');
           return of(null);
         })
       )
       .subscribe();
+    
+   }, 1100);
+    
   }
 }
