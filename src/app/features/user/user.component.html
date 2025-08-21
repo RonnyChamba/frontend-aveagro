@@ -72,7 +72,19 @@
                 {{ users.email }}
               </td>
               <td>
+                 <button
+                  class="bg-red-500 rounded-lg p-3 inline-block cursor-pointer mr-2"
+                  (click)="deleteUser.open(); dataFlotante.set(users.id)"
+                >
+                  <img src="assets/icons/trash-icon.svg" alt="Eliminar" class="size-3" />
+                </button>
                 <button
+                class="bg-yellow-500 rounded-lg p-3 inline-block cursor-pointer"
+                (click)="openNewUser('actualizar', users.id); dataFlotante.set(users.id)"
+              >
+                <img src="assets/icons/edit-copy.svg" alt="Eliminar" class="size-3" />
+              </button>
+                 <!-- <button
                   class="bg-red-500 rounded-lg p-3 inline-block cursor-pointer"
                   (click)="deleteUser.open(); dataFlotante.set(users.id)"
                 >
@@ -84,7 +96,7 @@
                 (click)="openNewUser('actualizar', users.id); dataFlotante.set(users.id)"
               >
                 <img src="assets/icons/edit-copy.svg" alt="Eliminar" class="size-4" />
-              </button>
+              </button> -->
               </td>
             </tr>
             }

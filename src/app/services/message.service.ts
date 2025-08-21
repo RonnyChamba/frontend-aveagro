@@ -32,4 +32,51 @@ export class MessageServiceAlert {
       confirmButtonText: 'OK',
     });
   }
+
+  public mensajeInfo(mensaje: string) {
+    Swal.close();
+    const response = Swal.fire({
+      title: 'Información',
+      text: mensaje,
+      icon: 'info',
+      allowOutsideClick: false,
+      confirmButtonText: 'OK',
+    });
+
+    return response;
+  }
+
+    public mensajeSuccess(mensaje: string) {
+    Swal.close();
+    const response = Swal.fire({
+      title: 'Correcto',
+      text: mensaje,
+      icon: 'success',
+      confirmButtonText: 'OK',
+      allowOutsideClick: false,
+    });
+
+    return response;
+  }
+
+  
+  public mensajeConfirmationTitle(
+    titulo: string,
+    mensaje: string,
+    icon: 'warning' | 'error' | 'info' | 'success' = 'info',
+    tituloBotonConfirmacion: string = 'Confirmar',
+    tituloBotonCancelacion: string = 'Cancelar',
+  ) {
+    Swal.close();
+   return Swal.fire({
+      title: titulo,
+      text: mensaje,
+      icon: icon,
+      showCancelButton: true,
+      confirmButtonText: tituloBotonConfirmacion,
+      cancelButtonText: tituloBotonCancelacion,
+    });
+  }
+
+
 }

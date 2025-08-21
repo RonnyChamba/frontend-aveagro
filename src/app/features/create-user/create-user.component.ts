@@ -97,7 +97,7 @@ export class CreateUserComponent {
     dni: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(13)]],
     address: ['', [Validators.maxLength(50)]],
     password: ['', [Validators.required, Validators.minLength(8), passwordValidator()]],
-    email: ['', [emailValidator(), Validators.maxLength(50)]],
+    email: ['', [ Validators.required, emailValidator(), Validators.maxLength(50)]],
     cellphone: ['', [onlyNumbersValidator(), Validators.maxLength(10)]],
     rolName: ['', [Validators.required]],
   });
