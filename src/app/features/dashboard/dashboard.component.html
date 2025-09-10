@@ -8,7 +8,7 @@
       <div>
         <p class="text-gray-500 text-sm">Productos Registrados</p>
         <h3 class="text-lg font-bold text-yellow-600">
-          {{ producto()!.data!.length || 0 }}
+          {{ producto()?.data?.length || 0 }}
         </h3>
       </div>
     </div>
@@ -21,7 +21,7 @@
       <div>
         <p class="text-gray-500 text-sm">Clientes Registrados</p>
         <h3 class="text-lg font-bold text-orange-600">
-          {{ cliente()!.data!.length || 0 }}
+          {{ cliente()?.data?.length || 0 }}
         </h3>
       </div>
     </div>
@@ -34,19 +34,19 @@
       <div>
         <p class="text-gray-500 text-sm">Documentos Autorizados</p>
         <h3 class="text-lg font-bold text-red-600">
-          {{ dataDoc()!.data!.length || 0 }}
+          {{ dataDoc()?.data?.length || 0 }}
         </h3>
       </div>
     </div>
   </div>
 
   <div class="grid grid-cols-4 gap-4">
-    <div class="col-span-3 card bg-white shadow-md rounded-lg border border-gray-200 mt-4 p-4">
+    <div class="col-span-4 card bg-white shadow-md rounded-lg border border-gray-200 mt-4 p-4">
       <p-chart type="line" [data]="data" [options]="options" class="h-[5rem]" />
     </div>
 
-    <div class="col-span-1 card bg-white shadow-md rounded-lg border border-gray-200 mt-4 p-4">
+    <!-- <div class="col-span-1 card bg-white shadow-md rounded-lg border border-gray-200 mt-4 p-4">
       <p-chart type="doughnut" [data]="dataRounde" [options]="optionsRpunde"  />
-    </div>
+    </div> -->
   </div>
 </div>

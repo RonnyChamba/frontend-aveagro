@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, inject, PLATFORM_ID, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { PedidosService } from '../../services';
 import { isPlatformBrowser } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
+import { finalize, mergeMap, of } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,24 +12,34 @@ import { ChartModule } from 'primeng/chart';
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
+
+  data: any;
+  options: any;
+  platformId = inject(PLATFORM_ID);
+  public readonly producto = signal<any | null>([]);
+  public readonly cliente = signal<any | null>(null);
+  public readonly dataDoc = signal<any | null>(null);
 
   constructor(
     private readonly pedidoService: PedidosService,
     private cd: ChangeDetectorRef,
 
   ) {
+
+  }
+
+  ngOnInit() {
     this.getProduct();
     this.getPedidosByCliente();
     this.getDoc();
-   }
+    this.initChart();
 
-  public readonly producto = signal<any | null>(null);
-  public readonly cliente = signal<any | null>(null);
-  public readonly dataDoc = signal<any | null>(null);
-
+    // this.initChartRounde();
+  }
   getProduct() {
     this.pedidoService.getProductos().subscribe((data) => {
+      console.log(data);
       this.producto.set(data);
 
     });
@@ -47,16 +58,6 @@ export class DashboardComponent {
   }
 
 
-  data: any;
-
-  options: any;
-
-  platformId = inject(PLATFORM_ID);
-
-  ngOnInit() {
-    this.initChart();
-    this.initChartRounde();
-  }
 
   initChart() {
     if (isPlatformBrowser(this.platformId)) {
@@ -65,65 +66,84 @@ export class DashboardComponent {
       const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
       const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
 
-      this.data = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-          {
-            type: 'line',
-            label: 'Dataset 1',
-            borderColor: documentStyle.getPropertyValue('--p-orange-500'),
-            borderWidth: 2,
-            fill: false,
-            tension: 0.4,
-            data: [50, 25, 12, 48, 56, 76, 42],
-          },
-          {
-            type: 'bar',
-            label: 'Dataset 2',
-            backgroundColor: documentStyle.getPropertyValue('--p-gray-500'),
-            data: [21, 84, 24, 75, 37, 65, 34],
-            borderColor: 'white',
-            borderWidth: 2,
-          },
-          {
-            type: 'bar',
-            label: 'Dataset 3',
-            backgroundColor: documentStyle.getPropertyValue('--p-cyan-500'),
-            data: [41, 52, 24, 74, 23, 21, 32],
-          },
-        ],
-      };
+      of(console.log("cargando info"))
+        .pipe(
+          mergeMap(() => this.pedidoService.getInfoDashBoard()),
+          finalize(() => console.log("fin carga info")),
+        )
+        .subscribe((resp) => {
+          console.log(resp);
 
-      this.options = {
-        maintainAspectRatio: false,
-        aspectRatio: 1,
-        plugins: {
-          legend: {
-            labels: {
-              color: textColor,
+          let data = (resp.data);
+
+          // let labelMonths = data.map(item => item.nombreMes);
+          // let labelTotal = data.map(item => item.total);
+
+          this.data = {
+            // labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'],
+            labels: resp.data.labels,
+            datasets: [
+              {
+                type: 'line',
+                label: 'Ventas ($)',
+                borderColor: documentStyle.getPropertyValue('--p-orange-500'),
+                borderWidth: 2,
+                fill: false,
+                tension: 0.4,
+                // data: [21, 84, 24, 75, 37, 65, 34, 13, 14],
+                data: resp.data.ventasTotales
+              },
+              {
+                type: 'line',
+                label: 'Productos',
+                backgroundColor: documentStyle.getPropertyValue('--p-gray-500'),
+                borderWidth: 2,
+                fill: false,
+                //  tension: 0.4,
+                // data: [21, 84, 24, 75, 37, 65, 34, 13, 14],
+                data: resp.data.productosVendidos
+
+              }
+            ],
+          };
+
+          this.options = {
+            maintainAspectRatio: false,
+            aspectRatio: 1,
+            plugins: {
+              legend: {
+                labels: {
+                  color: textColor,
+                },
+              },
             },
-          },
-        },
-        scales: {
-          x: {
-            ticks: {
-              color: textColorSecondary,
+            scales: {
+              x: {
+                ticks: {
+                  color: textColorSecondary,
+                },
+                grid: {
+                  color: surfaceBorder,
+                },
+              },
+              y: {
+                ticks: {
+                  color: textColorSecondary,
+                },
+                grid: {
+                  color: surfaceBorder,
+                },
+              },
             },
-            grid: {
-              color: surfaceBorder,
-            },
-          },
-          y: {
-            ticks: {
-              color: textColorSecondary,
-            },
-            grid: {
-              color: surfaceBorder,
-            },
-          },
-        },
-      };
-      this.cd.markForCheck();
+          };
+
+          // inidica que el grafico ya debe renderizarle
+          this.cd.markForCheck();
+        });
+
+
+
+
     }
   }
 
@@ -133,32 +153,32 @@ export class DashboardComponent {
 
   initChartRounde() {
     if (isPlatformBrowser(this.platformId)) {
-        const documentStyle = getComputedStyle(document.documentElement);
-        const textColor = documentStyle.getPropertyValue('--text-color');
+      const documentStyle = getComputedStyle(document.documentElement);
+      const textColor = documentStyle.getPropertyValue('--text-color');
 
-        this.dataRounde = {
-            labels: ['A', 'B', 'C'],
-            datasets: [
-                {
-                    data: [540, 325, 702],
-                    backgroundColor: [documentStyle.getPropertyValue('--p-cyan-500'), documentStyle.getPropertyValue('--p-orange-500'), documentStyle.getPropertyValue('--p-gray-500')],
-                    hoverBackgroundColor: [documentStyle.getPropertyValue('--p-cyan-400'), documentStyle.getPropertyValue('--p-orange-400'), documentStyle.getPropertyValue('--p-gray-400')]
-                }
-            ]
-        };
+      this.dataRounde = {
+        labels: ['A', 'B', 'C'],
+        datasets: [
+          {
+            data: [540, 325, 702],
+            backgroundColor: [documentStyle.getPropertyValue('--p-cyan-500'), documentStyle.getPropertyValue('--p-orange-500'), documentStyle.getPropertyValue('--p-gray-500')],
+            hoverBackgroundColor: [documentStyle.getPropertyValue('--p-cyan-400'), documentStyle.getPropertyValue('--p-orange-400'), documentStyle.getPropertyValue('--p-gray-400')]
+          }
+        ]
+      };
 
-        this.optionsRpunde = {
-            plugins: {
-                legend: {
-                    labels: {
-                        usePointStyle: true,
-                        color: textColor
-                    }
-                }
+      this.optionsRpunde = {
+        plugins: {
+          legend: {
+            labels: {
+              usePointStyle: true,
+              color: textColor
             }
-        };
-        this.cd.markForCheck()
+          }
+        }
+      };
+      this.cd.markForCheck()
     }
 
-}
+  }
 }

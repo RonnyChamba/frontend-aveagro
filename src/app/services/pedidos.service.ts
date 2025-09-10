@@ -160,4 +160,8 @@ export class PedidosService {
      responseType: 'blob' as 'json'
     } );
   }
+
+    getInfoDashBoard(): Observable<any> {
+    return this.httpClient.get(environment.urlMsVeagro + "/dashboard/info");
+  }
 }

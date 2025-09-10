@@ -28,7 +28,7 @@
             <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
               <th scope="col">Nombre</th>
               <th scope="col">Identificación</th>
-              <th scope="col">Telefono</th>
+              <th scope="col">Tel&eacute;fono</th>
               <th scope="col">Dirección</th>
               <th scope="col">Email</th>
               <th scope="col">Acciones</th>
@@ -79,17 +79,17 @@
               </td>
               <td class="m-2">
                 <button
-                  class="bg-red-500 rounded-lg p-3 inline-block cursor-pointer"
+                  class="bg-red-500 rounded-lg p-3 inline-block cursor-pointer mr-2"
                   (click)="deleteClientModal.open(); dataFlotante.set(client.id)"
                 >
-                  <img src="assets/icons/trash-icon.svg" alt="Eliminar" class="size-4" />
+                  <img src="assets/icons/trash-icon.svg" alt="Eliminar" class="size-3" />
                 </button>
 
                 <button
-                  class="bg-red-500 rounded-lg p-3 inline-block cursor-pointer"
+                  class="bg-yellow-500 rounded-lg p-3 inline-block cursor-pointer"
                   (click)="openModalCustomer('actualiazr',client.id); dataFlotante.set(client.id)"
                 >
-                  <img src="assets/icons/edit-copy.svg" alt="Editar" class="size-4" />
+                  <img src="assets/icons/edit-copy.svg" alt="Editar" class="size-3" />
                 </button>
               </td>
             </tr>
