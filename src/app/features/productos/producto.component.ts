@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, signal, Vie
 import { ModalComponent } from '../../components';
 import { RouterLink } from '@angular/router';
 import { TextInitialsPipe } from '../../pipes';
-import {  PedidosService } from '../../services';
+import {  AuthService, PedidosService } from '../../services';
 import { finalize, mergeMap, of, take } from 'rxjs';
 import { NgOptimizedImage } from '@angular/common';
 import { CreateClientesComponent } from '../create-clientes';
@@ -38,11 +38,14 @@ filteredProduct: any[] = [];
 
   public readonly dataFlotante = signal<string>('');
 
+  public isAdmin:boolean= false;
   public productIdeUpdate: any= null;
   constructor(
     private readonly destroyRef: DestroyRef,
-    private readonly pedidoService: PedidosService
+    private readonly pedidoService: PedidosService,
+     private readonly _authService: AuthService,
   ) {
+      this.isAdmin =  "ADMIN" === _authService.getRolApp();
     this.getPedidosByCliente();
 
     this.searchControl.valueChanges.subscribe((value) => {

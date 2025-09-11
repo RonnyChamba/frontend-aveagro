@@ -77,24 +77,24 @@ export const routes: Routes & {
       //     name: 'Inventario',
       //   },
       // },
-      {
-        path: 'users',
-        loadChildren: () => import('./features/user/routes'),
-        canActivate: [superAdminGuard],
-        data: {
-          icon: '/assets/icons/contact.svg',
-          name: 'Usuarios',
-        },
-      },
-      {
-        path: 'config',
-        loadChildren: () => import('./features/config/routes'),
-        data: {
-          icon: '/assets/icons/settings.svg',
-          name: 'Configuración',
-          hideInMenu: true,
-        },
-      },
+      // {
+      //   path: 'users',
+      //   loadChildren: () => import('./features/user/routes'),
+      //   canActivate: [superAdminGuard],
+      //   data: {
+      //     icon: '/assets/icons/contact.svg',
+      //     name: 'Usuarios',
+      //   },
+      // },
+      // {
+      //   path: 'config',
+      //   loadChildren: () => import('./features/config/routes'),
+      //   data: {
+      //     icon: '/assets/icons/settings.svg',
+      //     name: 'Configuración',
+      //     hideInMenu: true,
+      //   },
+      // },
 
       {
         path: '**',

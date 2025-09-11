@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal, ViewChi
 import { ModalComponent } from '../../components';
 import { RouterLink } from '@angular/router';
 import { TextInitialsPipe } from '../../pipes';
-import { PedidosService } from '../../services';
+import { AuthService, PedidosService } from '../../services';
 import { finalize, mergeMap, of, take, takeUntil } from 'rxjs';
 import { JsonPipe, NgOptimizedImage } from '@angular/common';
 import { CreateClientesComponent } from '../create-clientes';
@@ -44,11 +44,16 @@ export class ClientesComponent {
   searchControl = new FormControl('');
 
   filteredClients: any[] = [];
+  public isAdmin:boolean= false;
 
   constructor(
     private readonly destroyRef: DestroyRef,
     private readonly pedidoService: PedidosService,
+     private readonly _authService: AuthService,
   ) {
+
+
+    this.isAdmin =  "ADMIN" === _authService.getRolApp();
     this.getPedidosByCliente();
     this.searchControl.valueChanges.subscribe((value) => {
       const searchText = value?.toString().trim().toLowerCase() || '';

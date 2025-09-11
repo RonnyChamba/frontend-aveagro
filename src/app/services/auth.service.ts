@@ -54,6 +54,7 @@ export class AuthService {
   logout(): void {
     // Eliminar el token de localStorage (si lo tienes almacenado)
     localStorage.removeItem('token');
+    localStorage.removeItem('rolApp');
 
     // Eliminar los datos del usuario (userData) de localStorage
 
@@ -77,6 +78,16 @@ export class AuthService {
 
   saveToken(token: string) {
     localStorage.setItem('token', token);
+
+  }
+
+  saveRolApp(rol: string) {
+    localStorage.setItem('rolApp', rol);
+
+  }
+
+   getRolApp() {
+   return localStorage.getItem('rolApp') || ""; // Ejemplo de verificación
 
   }
 }

@@ -3,19 +3,16 @@
     <nav class="flex gap-4 justify-between items-center flex-wrap md:flex-row flex-col">
       <!-- Search -->
       <div class="bg-stone-100 w-full md:max-w-96 flex h-11 items-center rounded-2xl ps-4 gap-4">
-        <label for="searchApp" class="relative size-4 shrink-0"
-          ><img ngSrc="/assets/icons/search.svg" alt="Search" fill
-        /></label>
-        <input type="text" id="searchApp" placeholder="Buscar Por Nombre o Codigo" class="bg-transparent grow h-full px-2"
-        [formControl]="searchControl" />
+        <label for="searchApp" class="relative size-4 shrink-0"><img ngSrc="/assets/icons/search.svg" alt="Search"
+            fill /></label>
+        <input type="text" id="searchApp" placeholder="Buscar Por Nombre o Codigo"
+          class="bg-transparent grow h-full px-2" [formControl]="searchControl" />
 
       </div>
 
       <div class="max-md:w-full">
-        <button
-          class="flex items-center gap-2 bg-secondary text-white px-4 py-2 rounded-lg"
-          (click)="openNewProducto('nuevo', null)"
-        >
+        <button class="flex items-center gap-2 bg-secondary text-white px-4 py-2 rounded-lg"
+          (click)="openNewProducto('nuevo', null)">
           <div class="relative size-5 shrink-0"><img ngSrc="/assets/icons/add.svg" alt="Create" fill /></div>
           Agregar
         </button>
@@ -48,8 +45,7 @@
           <tbody>
             @for (client of filteredProduct; track client.id) {
             <tr
-              class="bg-white border-b border-dashed border-neutral-200 *:px-6 *:py-4 *:whitespace-nowrap [&>th]:ps-0"
-            >
+              class="bg-white border-b border-dashed border-neutral-200 *:px-6 *:py-4 *:whitespace-nowrap [&>th]:ps-0">
               <!-- <th scope="row" class="font-normal">
                 <a [routerLink]="[client.id]">
                   <div class="flex gap-4 items-center">
@@ -91,18 +87,18 @@
                 {{ client.amount}}
               </td>
               <td class="">
-                <button
-                  class="bg-red-500 rounded-lg p-3 inline-block cursor-pointer mr-2"
-                  (click)="deleteClientModal.open(); dataFlotante.set(client.id)"
-                >
+                @if (isAdmin) {
+                <button class="bg-red-500 rounded-lg p-3 inline-block cursor-pointer mr-2"
+                  (click)="deleteClientModal.open(); dataFlotante.set(client.id)">
                   <img src="assets/icons/trash-icon.svg" alt="Eliminar" class="size-3" />
                 </button>
-                <button
-                class="bg-yellow-500 rounded-lg p-3 inline-block cursor-pointer"
-                (click)="openNewProducto('actualizar', client.id); dataFlotante.set(client.id)"
-              >
-                <img src="assets/icons/edit-copy.svg" alt="Eliminar" class="size-3" />
-              </button>
+
+                }
+
+                <button class="bg-yellow-500 rounded-lg p-3 inline-block cursor-pointer"
+                  (click)="openNewProducto('actualizar', client.id); dataFlotante.set(client.id)">
+                  <img src="assets/icons/edit-copy.svg" alt="Editar" class="size-3" />
+                </button>
               </td>
             </tr>
             }
@@ -127,13 +123,8 @@
       <header class="p-4 flex justify-between items-center border border-b border-gray-300">
         <h2 class="font-bold text-xl truncate">Eliminar Producto</h2>
         <button (click)="deleteClientModal.close()" class="shrink-0">
-          <img
-            ngSrc="/assets/icons/close-icon.svg"
-            width="14"
-            height="18"
-            alt="close"
-            style="filter: invert(64%) sepia(1%) saturate(370%) hue-rotate(314deg) brightness(94%) contrast(91%)"
-          />
+          <img ngSrc="/assets/icons/close-icon.svg" width="14" height="18" alt="close"
+            style="filter: invert(64%) sepia(1%) saturate(370%) hue-rotate(314deg) brightness(94%) contrast(91%)" />
         </button>
       </header>
       @if (dataFlotante(); as idCliente) {
@@ -151,10 +142,8 @@
             <button class="bg-gray-200 text-gray-600 px-4 py-2 rounded-md" (click)="deleteClientModal.close()">
               Cancelar
             </button>
-            <button
-              class="bg-red-600 text-white px-4 py-2 rounded-md"
-              (click)="deleteClient(idCliente); deleteClientModal.close()"
-            >
+            <button class="bg-red-600 text-white px-4 py-2 rounded-md"
+              (click)="deleteClient(idCliente); deleteClientModal.close()">
               Eliminar
             </button>
           </div>
@@ -166,26 +155,20 @@
   }
 </app-modal>
 
-<app-modal
- #newClientModal
- >
+<app-modal #newClientModal>
   @defer {
   <div class="h-full flex items-center">
     <div class="bg-white w-full rounded-lg overflow-auto max-h-full">
       <header class="p-4 flex justify-between items-center border border-b border-gray-300">
         <h2 class="font-bold text-xl truncate">{{tipoAction()=='nuevo'?'Nuevo Producto': 'Actualizar Producto'}}</h2>
         <button (click)="newClientModal.close()" class="shrink-0">
-          <img
-            ngSrc="/assets/icons/close-icon.svg"
-            width="14"
-            height="18"
-            alt="close"
-            style="filter: invert(64%) sepia(1%) saturate(370%) hue-rotate(314deg) brightness(94%) contrast(91%)"
-          />
+          <img ngSrc="/assets/icons/close-icon.svg" width="14" height="18" alt="close"
+            style="filter: invert(64%) sepia(1%) saturate(370%) hue-rotate(314deg) brightness(94%) contrast(91%)" />
         </button>
       </header>
       <section class="p-4">
-        <app-create-productos (client)="newClientModal.close()" (client)="$event && addClient($event)"  [data]="productIdeUpdate" />
+        <app-create-productos (client)="newClientModal.close()" (client)="$event && addClient($event)"
+          [data]="productIdeUpdate" />
       </section>
     </div>
   </div>

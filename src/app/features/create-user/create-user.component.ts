@@ -75,7 +75,8 @@ export class CreateUserComponent {
       this.setEditarUser();
     } else {
       // Agregar validadores
-      this.form.get("password")?.setValidators([Validators.required, Validators.minLength(8), passwordValidator()]);
+      // this.form.get("password")?.setValidators([Validators.required, Validators.minLength(8), passwordValidator()]);
+      this.form.get("password")?.setValidators([Validators.required, Validators.minLength(8)]);
       this.form.get("password")?.updateValueAndValidity();
     }
   }
@@ -96,7 +97,7 @@ export class CreateUserComponent {
     name: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50), onlyLettersValidator()]],
     dni: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(13)]],
     address: ['', [Validators.maxLength(50)]],
-    password: ['', [Validators.required, Validators.minLength(8), passwordValidator()]],
+    password: ['', [Validators.required, Validators.minLength(8)]],
     email: ['', [ Validators.required, emailValidator(), Validators.maxLength(50)]],
     cellphone: ['', [onlyNumbersValidator(), Validators.maxLength(10)]],
     rolName: ['', [Validators.required]],

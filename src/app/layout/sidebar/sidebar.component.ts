@@ -20,13 +20,14 @@ export class SidebarComponent {
 
   public readonly appName = "D. VEAGRO";
   public readonly routes = routes[2].children!.filter((route) => {
-    const userRole = this.authService.userRole;
+    const userRole = this.authService.getRolApp();
+    // console.log(userRole);
     return (
       route?.data &&
       route?.data['name'] &&
       route?.data['icon'] &&
       !route?.data['hideInMenu'] &&
-      (route.path !== 'users' || userRole === 'SUPER_ADMIN')
+      (route.path !== 'usuarios' || userRole === 'ADMIN')
     );
 
   });

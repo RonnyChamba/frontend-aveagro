@@ -49,8 +49,10 @@ const req = {
       .pipe(
         tap((resp: any) => {
 
+          console.log(resp);
           const tokenJwt = resp.data?.token;
           this._authService.saveToken(tokenJwt);
+          this._authService.saveRolApp( resp.data?.rol);
           this.messageService.loadingConMensaje(false);
           this.router.navigate(['/dashboard']);
         }),
